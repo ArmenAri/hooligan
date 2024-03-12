@@ -1,3 +1,8 @@
+using Hooligan.ApiService;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults & Aspire components.
@@ -5,6 +10,10 @@ builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddProblemDetails();
+
+builder.Services.AddDbContext<HooliganDbContext>(options =>
+        options.UseSqlite(Configuration.GetConnectionString("SQLiteDbConnectionString"))
+    );
 
 var app = builder.Build();
 
