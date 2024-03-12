@@ -14,13 +14,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hooligan.AppHost", "Hooliga
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hooligan.ServiceDefaults", "Hooligan.Aspire\Hooligan.ServiceDefaults\Hooligan.ServiceDefaults.csproj", "{C7F8758F-DE9B-472D-BC9F-B12FB4217C97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hooligan.Application", "Hooligan.Api.Architecture\Hooligan.Application\Hooligan.Application.csproj", "{D01B71E3-9FBF-44DB-99A5-0D232F4AED42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hooligan.Application", "Hooligan.Architecture\Hooligan.Application\Hooligan.Application.csproj", "{D01B71E3-9FBF-44DB-99A5-0D232F4AED42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hooligan.Domain", "Hooligan.Api.Architecture\Hooligan.Domain\Hooligan.Domain.csproj", "{444B8B1B-F22C-4847-BEA3-5D0393CDACD1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hooligan.Domain", "Hooligan.Architecture\Hooligan.Domain\Hooligan.Domain.csproj", "{444B8B1B-F22C-4847-BEA3-5D0393CDACD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hooligan.Infrastructure", "Hooligan.Api.Architecture\Hooligan.Infrastructure\Hooligan.Infrastructure.csproj", "{1369FAA8-9A0B-48B0-936C-00BB71405A23}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hooligan.Infrastructure", "Hooligan.Architecture\Hooligan.Infrastructure\Hooligan.Infrastructure.csproj", "{1369FAA8-9A0B-48B0-936C-00BB71405A23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hooligan.Presentation", "Hooligan.Api.Architecture\Hooligan.Presentation\Hooligan.Presentation.csproj", "{D93F2A07-FD56-49D3-8D0C-91FB72C443C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hooligan.Presentation", "Hooligan.Architecture\Hooligan.Presentation\Hooligan.Presentation.csproj", "{D93F2A07-FD56-49D3-8D0C-91FB72C443C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
