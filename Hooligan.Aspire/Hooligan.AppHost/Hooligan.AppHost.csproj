@@ -9,12 +9,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Hooligan.ApiService\Hooligan.ApiService.csproj"/>
-        <ProjectReference Include="..\Hooligan.Web\Hooligan.Web.csproj"/>
+        <PackageReference Include="Aspire.Hosting" Version="9.0.0-preview.1.24113.3"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Hosting" Version="9.0.0-preview.1.24113.3"/>
+      <ProjectReference Include="..\..\Hooligan.Api.Architecture\Hooligan.Presentation\Hooligan.Presentation.csproj" />
+      <ProjectReference Include="..\..\Hooligan.Blazor\Hooligan.Web\Hooligan.Web.csproj" />
     </ItemGroup>
 
 </Project>

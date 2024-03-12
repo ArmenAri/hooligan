@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Hooligan.ServiceDefaults\Hooligan.ServiceDefaults.csproj"/>
+      <ProjectReference Include="..\..\Hooligan.Aspire\Hooligan.ServiceDefaults\Hooligan.ServiceDefaults.csproj" />
     </ItemGroup>
 
 </Project>
