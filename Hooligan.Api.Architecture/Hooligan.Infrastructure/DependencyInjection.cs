@@ -10,7 +10,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         return services.AddDbContext<HooliganDbContext>(options =>
-            options.UseSqlite(configuration.GetConnectionString("SQLiteDbConnectionString"))
+            options.UseSqlite(configuration.GetConnectionString("HooliganConnectionString"))
         );
     }
 }
