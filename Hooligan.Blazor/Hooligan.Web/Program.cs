@@ -12,7 +12,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddOutputCache();
 
-builder.Services.AddHttpClient<WeatherApiClient>(client => client.BaseAddress = new("http://apiservice"));
+builder.Services.AddHttpClient<HooliganApiClient>(client => client.BaseAddress = new Uri("http://api"));
 
 var app = builder.Build();
 

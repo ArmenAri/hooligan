@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Hooligan.Api.Architecture\Hooligan.Presentation\Hooligan.Presentation.csproj" />
+      <ProjectReference Include="..\..\Hooligan.Architecture\Hooligan.Presentation\Hooligan.Presentation.csproj" />
       <ProjectReference Include="..\..\Hooligan.Blazor\Hooligan.Web\Hooligan.Web.csproj" />
     </ItemGroup>
 
