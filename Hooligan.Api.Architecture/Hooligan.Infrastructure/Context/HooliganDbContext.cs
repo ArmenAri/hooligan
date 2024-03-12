@@ -5,5 +5,5 @@ namespace Hooligan.Infrastructure.Context;
 
 public class HooliganDbContext(DbContextOptions<HooliganDbContext> options) : DbContext(options)
 {
-    public DbSet<Association>? Associations { get; init; }
+    public required DbSet<Association> Associations { get; init; }
 }
