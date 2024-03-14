@@ -1,0 +1,7 @@
+resources:
+- backend
+- front
+
+generatorOptions:
+  disableNameSuffixHash: true
+

@@ -12,7 +12,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddOutputCache();
 
-builder.Services.AddHttpClient<HooliganApiClient>(client => client.BaseAddress = new Uri("http://api"));
+builder.Services.AddHttpClient<HooliganApiClient>(client => client.BaseAddress = new Uri("http://backend"));
 
 var app = builder.Build();
 
