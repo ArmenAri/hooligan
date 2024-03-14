@@ -2,7 +2,6 @@ using Hooligan.Application.Interfaces;
 using Hooligan.Application.Structures;
 using Hooligan.Domain;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hooligan.Application.Usages;
@@ -30,8 +29,7 @@ public sealed class CreateAssociationHandler(
 
         if (@new is null)
         {
-            throw new BadHttpRequestException(
-                $"Cannot retrieve association from {externalAssociationProvider.GetType()}");
+            throw new ArgumentException($"Cannot retrieve association from {externalAssociationProvider.GetType()}");
         }
 
         await associationRepository.CreateAsync(@new, cancellationToken);
