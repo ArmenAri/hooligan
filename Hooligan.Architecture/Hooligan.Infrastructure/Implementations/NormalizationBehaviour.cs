@@ -13,19 +13,25 @@ public class NormalizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
 {
     public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        if (request is not null and INormalizeProperties)
+        if (request is null or not INormalizeProperties)
         {
-            var properties = request.GetType().GetProperties();
-            foreach (var property in properties)
+            return next();
+        }
+
+        var properties = request.GetType().GetProperties();
+
+        foreach (var property in properties)
+        {
+            if (property.PropertyType != typeof(string))
             {
-                if (property.PropertyType == typeof(string))
-                {
-                    var value = property.GetValue(request) as string;
-                    if (!string.IsNullOrEmpty(value))
-                    {
-                        property.SetValue(request, value.ToLowerInvariant());
-                    }
-                }
+                continue;
+            }
+
+            var value = property.GetValue(request) as string;
+
+            if (!string.IsNullOrEmpty(value))
+            {
+                property.SetValue(request, value.ToLowerInvariant());
             }
         }
 
