@@ -20,7 +20,7 @@ public sealed class CreateAssociationHandler(IAssociationRepository associationR
 
         // TODO : Create the association calling AI
 
-        var @new = await externalAssociationProvider.GetNew(request.First, request.Second, cancellationToken);
+        var @new = await externalAssociationProvider.GetNewAsync(request.First, request.Second, cancellationToken);
         await associationRepository.CreateAsync(@new, cancellationToken);
 
         return @new;

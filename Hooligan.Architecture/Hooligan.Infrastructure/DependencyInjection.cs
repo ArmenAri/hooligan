@@ -1,5 +1,6 @@
 using Hooligan.Application.Interfaces;
 using Hooligan.Infrastructure.Context;
+using Hooligan.Infrastructure.HttpClient;
 using Hooligan.Infrastructure.Implementations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,9 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IAssociationRepository, AssociationRepository>();
-        services.AddScoped<IExternalAssociationProvider, FakerAssociationProvider>();
+        services.AddScoped<IExternalAssociationProvider, EdenAiAssociationProvider>();
+
+        services.AddHttpClient<OpenAiClientService>();
 
         return services.AddDbContext<HooliganDbContext>(options =>
             options.UseSqlite(configuration.GetConnectionString("HooliganConnectionString"))

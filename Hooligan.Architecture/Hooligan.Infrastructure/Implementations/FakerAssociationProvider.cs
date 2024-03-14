@@ -12,7 +12,7 @@ public class FakerAssociationProvider : IExternalAssociationProvider
         .RuleFor(a => a.Result, f => f.Internet.UserName())
         .RuleFor(a => a.Icon, _ => "😀");
 
-    public Task<Association> GetNew(string first, string second, CancellationToken cancellationToken = default)
+    public Task<Association> GetNewAsync(string first, string second, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(_fake(first, second).Generate());
     }
