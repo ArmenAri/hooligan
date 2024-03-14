@@ -1,12 +1,17 @@
 using Hooligan.Application.Interfaces;
+using Hooligan.Application.Structures;
 using Hooligan.Domain;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Hooligan.Application.Usages;
 
 public sealed record CreateAssociation(string First, string Second) : IRequest<Association>;
 
-public sealed class CreateAssociationHandler(IAssociationRepository associationRepository, IExternalAssociationProvider externalAssociationProvider)
+public sealed class CreateAssociationHandler(
+    IAssociationRepository associationRepository,
+    [FromKeyedServices(ServiceKeys.Eden)] IExternalAssociationProvider externalAssociationProvider)
     : IRequestHandler<CreateAssociation, Association>
 {
     public async Task<Association> Handle(CreateAssociation request, CancellationToken cancellationToken)
@@ -18,9 +23,17 @@ public sealed class CreateAssociationHandler(IAssociationRepository associationR
             return association;
         }
 
-        // TODO : Create the association calling AI
+        var @new = await externalAssociationProvider.GetNewAsync(
+            request.First,
+            request.Second,
+            cancellationToken);
 
-        var @new = await externalAssociationProvider.GetNewAsync(request.First, request.Second, cancellationToken);
+        if (@new is null)
+        {
+            throw new BadHttpRequestException(
+                $"Cannot retrieve association from {externalAssociationProvider.GetType()}");
+        }
+
         await associationRepository.CreateAsync(@new, cancellationToken);
 
         return @new;

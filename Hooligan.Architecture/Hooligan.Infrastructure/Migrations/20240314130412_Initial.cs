@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -15,7 +14,6 @@ namespace Hooligan.Infrastructure.Migrations
                 name: "Associations",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     First = table.Column<string>(type: "TEXT", nullable: false),
                     Second = table.Column<string>(type: "TEXT", nullable: false),
                     Result = table.Column<string>(type: "TEXT", nullable: false),
@@ -23,7 +21,7 @@ namespace Hooligan.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Associations", x => x.Id);
+                    table.PrimaryKey("PK_Associations", x => new { x.First, x.Second });
                 });
         }
 

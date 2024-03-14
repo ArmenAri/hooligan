@@ -9,7 +9,8 @@ public class AssociationRepository(HooliganDbContext context) : IAssociationRepo
 {
     public Task<Association?> ExistsAsync(string first, string second, CancellationToken cancellationToken)
     {
-        return context.Associations.Where(a => a.First == first && a.Second == second).FirstOrDefaultAsync(cancellationToken: cancellationToken);
+        return context.Associations.Where(a => a.First == first && a.Second == second)
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
     }
 
     public async Task<int> CreateAsync(Association association, CancellationToken cancellationToken)

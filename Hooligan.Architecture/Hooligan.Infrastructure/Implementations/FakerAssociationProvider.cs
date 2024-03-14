@@ -4,7 +4,7 @@ using Hooligan.Domain;
 
 namespace Hooligan.Infrastructure.Implementations;
 
-public class FakerAssociationProvider : IExternalAssociationProvider
+public sealed class FakerAssociationProvider : IExternalAssociationProvider
 {
     private readonly Func<string, string, Faker<Association>> _fake = (first, second) => new Faker<Association>()
         .RuleFor(a => a.First, _ => first)
@@ -12,8 +12,8 @@ public class FakerAssociationProvider : IExternalAssociationProvider
         .RuleFor(a => a.Result, f => f.Internet.UserName())
         .RuleFor(a => a.Icon, _ => "😀");
 
-    public Task<Association> GetNewAsync(string first, string second, CancellationToken cancellationToken = default)
+    public Task<Association?> GetNewAsync(string first, string second, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(_fake(first, second).Generate());
+        return Task.FromResult<Association?>(_fake(first, second).Generate());
     }
 }

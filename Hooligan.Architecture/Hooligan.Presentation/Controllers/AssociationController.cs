@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hooligan.Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/[controller]s")]
 public class AssociationController(ISender mediator) : ControllerBase
 {
     [HttpPost]
