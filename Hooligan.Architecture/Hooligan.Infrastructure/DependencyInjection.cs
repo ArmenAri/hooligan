@@ -3,6 +3,7 @@ using Hooligan.Application.Structures;
 using Hooligan.Infrastructure.Clients;
 using Hooligan.Infrastructure.Context;
 using Hooligan.Infrastructure.Implementations;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,8 @@ public static class DependencyInjection
         services.AddScoped<IAssociationRepository, AssociationRepository>();
 
         services.AddScoped<EdenApiClient>();
+
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(NormalizationBehaviour<,>));
 
         services.AddKeyedScoped<IExternalAssociationProvider, FakerAssociationProvider>(ServiceKeys.Faker);
         services.AddKeyedScoped<IExternalAssociationProvider, EdenAssociationProvider>(ServiceKeys.Eden);
