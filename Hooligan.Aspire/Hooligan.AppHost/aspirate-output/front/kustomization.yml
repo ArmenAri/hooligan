@@ -1,0 +1,16 @@
+resources:
+- deployment.yml
+- service.yml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+- name: front-env
+  literals:
+    - OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES=true
+    - OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES=true
+    - services__backend__0=http://backend:8080
+    - services__backend__1=https://backend:8443
+    - ASPNETCORE_URLS=http://+:8080
+

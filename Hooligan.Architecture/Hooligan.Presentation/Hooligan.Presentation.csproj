@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+      <UserSecretsId>8a6aa3ff-d539-4439-852a-8c63c78a32b5</UserSecretsId>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0-preview.1.24081.5" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0-preview.2.24128.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Hooligan.Aspire\Hooligan.ServiceDefaults\Hooligan.ServiceDefaults.csproj" />
+      <ProjectReference Include="..\Hooligan.Application\Hooligan.Application.csproj" />
+      <ProjectReference Include="..\Hooligan.Infrastructure\Hooligan.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

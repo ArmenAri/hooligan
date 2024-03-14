@@ -1,0 +1,5 @@
+@Hooligan.Presentation_HostAddress = http://localhost:5198
+
+GET {{Hooligan.Presentation_HostAddress}}/health/
+
+###
