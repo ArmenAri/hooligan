@@ -1,8 +1,9 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var api = builder.AddProject<Projects.Hooligan_Presentation>("api");
+var backend = builder
+    .AddProject<Projects.Hooligan_Presentation>("backend");
 
 builder.AddProject<Projects.Hooligan_Web>("front")
-    .WithReference(api);
+    .WithReference(backend);
 
 builder.Build().Run();
