@@ -15,10 +15,10 @@ public sealed class CreateAssociationHandler(
 {
     public async Task<Association> Handle(CreateAssociation request, CancellationToken cancellationToken)
     {
-        var canCraft = await associationRepository.CanBeUsedAsync(request.First.ToLower(), request.Second, cancellationToken);
+        var canCraft = await associationRepository.CanBeUsedAsync(request.First, request.Second, cancellationToken);
         if (!canCraft)
         {
-            throw new ArgumentException("One of the items has not been discorvered yet");
+            throw new ArgumentException("One of the items has not been discovered yet");
         }
 
         var association = await associationRepository.ExistsAsync(request.First, request.Second, cancellationToken);

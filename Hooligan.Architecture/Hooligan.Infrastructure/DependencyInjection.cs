@@ -16,6 +16,8 @@ public static class DependencyInjection
     {
         services.AddScoped<IAssociationRepository, AssociationRepository>();
 
+        services.AddScoped<CraftableItems>();
+
         services.AddScoped<EdenApiClient>();
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(NormalizationBehaviour<,>));
