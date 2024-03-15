@@ -8,4 +8,7 @@ public interface IAssociationRepository
     [Pure]
     public Task<Association?> ExistsAsync(string first, string second, CancellationToken cancellationToken = default);
     public Task<int> CreateAsync(Association association, CancellationToken cancellationToken = default);
+
+    [Pure]
+    public Task<bool> CanBeUsedAsync(string first, string second, CancellationToken cancellationToken = default);
 }

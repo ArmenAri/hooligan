@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hooligan.Infrastructure.Implementations;
 
-public class AssociationRepository(HooliganDbContext context) : IAssociationRepository
+public class AssociationRepository(HooliganDbContext context, CraftableItems craftableItems) : IAssociationRepository
 {
     public Task<Association?> ExistsAsync(string first, string second, CancellationToken cancellationToken)
     {
@@ -17,5 +17,11 @@ public class AssociationRepository(HooliganDbContext context) : IAssociationRepo
     {
         await context.AddAsync(association, cancellationToken);
         return await context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<bool> CanBeUsedAsync(string first, string second, CancellationToken cancellationToken = default)
+    {
+        var result = await craftableItems.ToListAsync(cancellationToken);
+        return result.Contains(first) && result.Contains(second);
     }
 }

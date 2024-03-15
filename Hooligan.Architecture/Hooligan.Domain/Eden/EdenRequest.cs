@@ -6,11 +6,9 @@ public class EdenRequest
 {
     [JsonPropertyName("response_as_dict")] public bool ResponseAsDict { get; set; } = true;
 
-    [JsonPropertyName("attributes_as_list")]
-    public bool AttributesAsList { get; set; }
+    [JsonPropertyName("attributes_as_list")] public bool AttributesAsList { get; set; }
 
-    [JsonPropertyName("show_original_response")]
-    public bool ShowOriginalResponse { get; set; }
+    [JsonPropertyName("show_original_response")] public bool ShowOriginalResponse { get; set; }
 
     [JsonPropertyName("temperature")] public int Temperature { get; set; }
 
@@ -20,6 +18,5 @@ public class EdenRequest
 
     [JsonPropertyName("text")] public required string Text { get; set; }
 
-    [JsonPropertyName("chatbot_global_action")]
-    public required string ChatbotGlobalAction { get; set; }
+    [JsonPropertyName("chatbot_global_action")] public required string ChatbotGlobalAction { get; set; }
 }
