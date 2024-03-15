@@ -1,13 +1,60 @@
 ﻿@page "/Game"
-
-@inject HooliganApiClient HooliganApi
+@rendermode InteractiveServer
 
 <PageTitle>Game</PageTitle>
 
-<h1>Game</h1>
+<h1>Hooligan Infinite Craft Game</h1>
 
-<p>This component demonstrates showing data loaded from a backend API service.</p>
+<MudDropContainer 
+    T="DropItem" 
+    Items="_items" 
+    ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)"
+    ItemDropped="ItemUpdated"
+    Class="d-flex flex-wrap flex-grow-1">
+    
+    <ChildContent>
+        <MudDropZone T="DropItem" Identifier="Selected Items" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+            <MudText Typo="Typo.h6" Class="mb-4">Selected Items</MudText>
+        </MudDropZone>
+        <MudDropZone T="DropItem" Identifier="Discovered Items" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+            <MudText Typo="Typo.h6" Class="mb-4">Discovered Items</MudText>
+        </MudDropZone>
+    </ChildContent>
+
+    <ItemRenderer>
+        <MudPaper Elevation="25" Class="pa-4 my-4">@context.Icon @context.Name</MudPaper>
+    </ItemRenderer>
+</MudDropContainer>
+
 
 @code {
+    private void OnDrop()
+    {
+        Console.WriteLine("Hello");
+    }
 
+    public class DropItem
+    {
+        public string Name { get; init; }
+        public string Icon { get; init; }
+        public string Identifier { get; set; }
+    }
+
+    private void ItemUpdated(MudItemDropInfo<DropItem> dropItem)
+    {
+        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
+    }
+
+    private void ItemUpdatedBis(MudDragAndDropItemTransaction<DropItem> dropItem)
+    {
+        Console.WriteLine(dropItem.Item);
+    }
+
+    private List<DropItem> _items = new()
+     {
+        new DropItem { Name = "Earth", Icon = "🌍", Identifier = "Discovered Items"},
+        new DropItem { Name = "Wind", Icon = "🌬️", Identifier = "Discovered Items"},
+        new DropItem { Name = "Fire", Icon = "🔥", Identifier = "Discovered Items"},
+        new DropItem { Name = "Water", Icon = "💧", Identifier = "Discovered Items" },
+    };
 }
