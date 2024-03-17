@@ -11,7 +11,6 @@
     ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)"
     ItemDropped="ItemUpdated"
     Class="d-flex flex-wrap flex-grow-1">
-    
     <ChildContent>
         <MudDropZone T="DropItem" Identifier="Selected Items" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
             <MudText Typo="Typo.h6" Class="mb-4">Selected Items</MudText>
@@ -22,13 +21,21 @@
     </ChildContent>
 
     <ItemRenderer>
-        <MudPaper Elevation="25" Class="pa-4 my-4">@context.Icon @context.Name</MudPaper>
+        <MudPaper ondrop="dropHandler(event)" Elevation="25" Class="pa-4 my-4">@context.Icon @context.Name</MudPaper>
     </ItemRenderer>
 </MudDropContainer>
 
+<script>
+    function dropHandler(event) {
+        event.preventDefault();
+        console.log(event);
+        var droppedItem = event.dataTransfer.getData("text");
+        console.log("Element dropped: TEST !!!! : ", droppedItem);
+    }
+</script>
 
 @code {
-    private void OnDrop()
+    private void HandleDrop(MudDragAndDropTransactionFinishedEventArgs<DropItem> dropItem)
     {
         Console.WriteLine("Hello");
     }
@@ -45,13 +52,19 @@
         dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
     }
 
-    private void ItemUpdatedBis(MudDragAndDropItemTransaction<DropItem> dropItem)
+    private void HandleItemDropped(object sender, DragEventArgs e)
+    {
+        //var droppedItem = args.Payload;
+        //var targetItem = args.TargetItem;
+    }
+
+    private void ItemUpdatedBis(MudDragAndDropTransactionFinishedEventArgs<DropItem> dropItem)
     {
         Console.WriteLine(dropItem.Item);
     }
 
     private List<DropItem> _items = new()
-     {
+    {
         new DropItem { Name = "Earth", Icon = "🌍", Identifier = "Discovered Items"},
         new DropItem { Name = "Wind", Icon = "🌬️", Identifier = "Discovered Items"},
         new DropItem { Name = "Fire", Icon = "🔥", Identifier = "Discovered Items"},
