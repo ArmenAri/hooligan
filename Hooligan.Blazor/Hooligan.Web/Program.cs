@@ -1,7 +1,9 @@
+using Grpc.Net.Client.Web;
 using Hooligan.Web;
 using Hooligan.Web.Components;
 using MudBlazor;
 using MudBlazor.Services;
+using HooliganNotification;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,9 @@ builder.Services.AddOutputCache();
 
 builder.Services.AddHttpClient<HooliganApiClient>(client => client.BaseAddress = new Uri("http://backend"));
 
+builder.Services.AddGrpcClient<NotificationService.NotificationServiceClient>(options => { options.Address = new Uri("http://grpc"); })
+                .ConfigurePrimaryHttpMessageHandler( () => new GrpcWebHandler(new HttpClientHandler()) );
+  
 builder.Services.AddMudServices(c =>
 {
     c.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;
