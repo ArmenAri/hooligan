@@ -1,13 +1,72 @@
 ﻿@page "/Game"
+@using Hooligan.Web.Models
+@rendermode InteractiveServer
 
+@inject IJSRuntime JSRuntime
 @inject HooliganApiClient HooliganApi
 
 <PageTitle>Game</PageTitle>
 
-<h1>Game</h1>
+<h1>Hooligan Infinite Craft Game</h1>
 
-<p>This component demonstrates showing data loaded from a backend API service.</p>
+<MudDropContainer
+    T="DraggableItem"
+    Items="_items"
+    ItemsSelector="@((item, dropzone) => item.Identifier == dropzone)"
+    ItemDropped="ItemUpdated"
+    Class="d-flex flex-wrap flex-grow-1">
+    <ChildContent>
+        <MudDropZone T="DraggableItem" Identifier="@Identifiers.Discoveries.ToString()" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+            <MudText Typo="Typo.h6" Class="mb-4">@Identifiers.Discoveries.ToString()</MudText>
+        </MudDropZone>
+    </ChildContent>
+    <ItemRenderer>
+        <MudPaper
+            @key="@context.Name"
+            id="@context.Name"
+            @ondrop="@(() => HandleDrop(@context))"
+            Elevation="25"
+            Class="pa-4 my-4">
+            @context.Icon @context.Name.ToUpperInvariant()
+        </MudPaper>
+    </ItemRenderer>
+</MudDropContainer>
+
 
 @code {
+
+    private DraggableItem? TargetItem { get; set; }
+
+    private void HandleDrop(DraggableItem item)
+    {
+        TargetItem = item;
+    }
+
+    private async Task ItemUpdated(MudItemDropInfo<DraggableItem> dropItem)
+    {
+        ArgumentNullException.ThrowIfNull(dropItem.Item);
+
+        if (TargetItem is not null)
+        {
+            var created = await HooliganApi.CreateAssociation(dropItem.Item.Name, TargetItem.Name);
+            ArgumentNullException.ThrowIfNull(created);
+
+            _items.Add(new DraggableItem
+            {
+                Name = created.Result,
+                Icon = created.Icon
+            });
+        }
+
+        TargetItem = null;
+    }
+
+    private readonly List<DraggableItem> _items =
+    [
+        new DraggableItem { Name = "earth", Icon = "🌍" },
+        new DraggableItem { Name = "wind", Icon = "🌬️" },
+        new DraggableItem { Name = "fire", Icon = "🔥" },
+        new DraggableItem { Name = "water", Icon = "💧" }
+    ];
 
 }
