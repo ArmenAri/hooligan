@@ -9,7 +9,7 @@ namespace Hooligan.Presentation.Controllers;
 public class AssociationController(ISender mediator) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<Association>> Post(CreateAssociation association)
+    public async Task<ActionResult<Association>> Post([FromBody] CreateAssociation association)
     {
         return await mediator.Send(association);
     }
