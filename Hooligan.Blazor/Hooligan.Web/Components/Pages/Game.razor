@@ -21,13 +21,14 @@
         </MudDropZone>
     </ChildContent>
     <ItemRenderer>
-        <MudPaper
+        <MudPaper 
+            id="@context.Id"
             @key="@context.Name"
-            id="@context.Name"
             @ondrop="@(() => HandleDrop(@context))"
             Elevation="25"
             Class="pa-4 my-4">
             @context.Icon @context.Name.ToUpperInvariant()
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" @onclick="@(() => DeleteCurrentItem(context.Id))" />
         </MudPaper>
     </ItemRenderer>
 </MudDropContainer>
@@ -38,10 +39,10 @@
 
     private List<DraggableItem> OriginalItems = new List<DraggableItem>
     {
-        new DraggableItem { Name = "earth", Icon = "🌍" },
-        new DraggableItem { Name = "wind", Icon = "🌬️" },
-        new DraggableItem { Name = "fire", Icon = "🔥" },
-        new DraggableItem { Name = "water", Icon = "💧" }
+        new DraggableItem { Id = Guid.NewGuid(), Name = "earth", Icon = "🌍" },
+        new DraggableItem { Id = Guid.NewGuid(), Name = "wind", Icon = "🌬️" },
+        new DraggableItem { Id = Guid.NewGuid(), Name = "fire", Icon = "🔥" },
+        new DraggableItem { Id = Guid.NewGuid(), Name = "water", Icon = "💧" }
     };
 
     private DraggableItem? TargetItem { get; set; }
@@ -68,6 +69,7 @@
 
             var newDraggableItem = new DraggableItem
             {
+                Id = Guid.NewGuid(),
                 Name = created.Result,
                 Icon = created.Icon
             };
@@ -81,6 +83,14 @@
         }
 
         TargetItem = null;
+    }
+
+    private async Task DeleteCurrentItem(Guid itemId)
+    {
+        Items.Remove(Items.Where(item => item.Id == itemId).First());
+        var localStorageDraggableItems = await GetDraggableItemsFromLocalStorage();
+        localStorageDraggableItems.Remove(localStorageDraggableItems.Where(item => item.Id == itemId).First());
+        await LocalStorage.SetItemAsync<List<DraggableItem>>("Hooligan.User.Session", localStorageDraggableItems);
     }
 
     private async Task<List<DraggableItem>> GetDraggableItemsFromLocalStorage()

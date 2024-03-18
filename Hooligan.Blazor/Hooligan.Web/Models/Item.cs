@@ -2,6 +2,7 @@ namespace Hooligan.Web.Models;
 
 public class Item
 {
+    public required Guid Id { get; set; }
     public required string Name { get; init; }
     public required string Icon { get; init; }
 }
