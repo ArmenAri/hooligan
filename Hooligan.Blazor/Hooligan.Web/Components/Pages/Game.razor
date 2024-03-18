@@ -2,21 +2,21 @@
 @using Hooligan.Web.Models
 @rendermode InteractiveServer
 
-@inject IJSRuntime JSRuntime
 @inject HooliganApiClient HooliganApi
+@inject ISnackbar Snackbar
 
 <PageTitle>Game</PageTitle>
 
 <h1>Hooligan Infinite Craft Game</h1>
 
 <MudDropContainer
-    T="DraggableItem"
+    T="Item"
     Items="_items"
     ItemsSelector="@((item, dropzone) => item.Identifier == dropzone)"
     ItemDropped="ItemUpdated"
     Class="d-flex flex-wrap flex-grow-1">
     <ChildContent>
-        <MudDropZone T="DraggableItem" Identifier="@Identifiers.Discoveries.ToString()" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+        <MudDropZone T="Item" Identifier="@Identifiers.Discoveries.ToString()" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
             <MudText Typo="Typo.h6" Class="mb-4">@Identifiers.Discoveries.ToString()</MudText>
         </MudDropZone>
     </ChildContent>
@@ -31,42 +31,62 @@
         </MudPaper>
     </ItemRenderer>
 </MudDropContainer>
-
+<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => Snackbar.Add("Simple Snackbar"))">
+    Open Snackbar
+</MudButton>
 
 @code {
 
-    private DraggableItem? TargetItem { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+    }
 
-    private void HandleDrop(DraggableItem item)
+    private Item? TargetItem { get; set; }
+
+    private void HandleDrop(Item item)
     {
         TargetItem = item;
     }
 
-    private async Task ItemUpdated(MudItemDropInfo<DraggableItem> dropItem)
+    private async Task ItemUpdated(MudItemDropInfo<Item> dropItem)
     {
         ArgumentNullException.ThrowIfNull(dropItem.Item);
 
         if (TargetItem is not null)
         {
-            var created = await HooliganApi.CreateAssociation(dropItem.Item.Name, TargetItem.Name);
-            ArgumentNullException.ThrowIfNull(created);
+            var response = await HooliganApi.CreateAssociation(new CreateAssociationCommand
+            (
+                dropItem.Item.Name,
+                TargetItem.Name
+            ));
 
-            _items.Add(new DraggableItem
+            if (response.IsFail())
             {
-                Name = created.Result,
-                Icon = created.Icon
-            });
+                Snackbar.Add(response.Error?.Message, Severity.Error, options => { options.ErrorIcon = Icons.Material.Filled.Error; });
+            }
+            else
+            {
+                _items.Add(new Item
+                {
+#pragma warning disable CS8601 // Possible null reference assignment.
+                    Name = response.Value?.Result,
+                    Icon = response.Value?.Icon
+#pragma warning restore CS8601 // Possible null reference assignment.
+                });
+            }
         }
 
         TargetItem = null;
     }
 
-    private readonly List<DraggableItem> _items =
+    private readonly List<Item> _items =
     [
-        new DraggableItem { Name = "earth", Icon = "🌍" },
-        new DraggableItem { Name = "wind", Icon = "🌬️" },
-        new DraggableItem { Name = "fire", Icon = "🔥" },
-        new DraggableItem { Name = "water", Icon = "💧" }
+        new Item { Name = "earth", Icon = "🌍" },
+        new Item { Name = "wind", Icon = "🌬️" },
+        new Item { Name = "fire", Icon = "🔥" },
+        new Item { Name = "water", Icon = "💧" }
     ];
 
 }

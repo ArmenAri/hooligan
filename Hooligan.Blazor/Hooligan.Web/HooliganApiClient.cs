@@ -1,14 +1,31 @@
+using System.Net;
+using Hooligan.Web.Models;
+
 namespace Hooligan.Web;
 
 public class HooliganApiClient(HttpClient httpClient)
 {
-    public async Task<Association?> CreateAssociation(string first, string second)
+    public async Task<HooliganResponse<Association, HooliganException>> CreateAssociation(
+        CreateAssociationCommand createAssociationCommand)
     {
-        var response = await httpClient.PostAsJsonAsync("/api/associations", new CreateAssociation(first, second));
-        return await response.Content.ReadFromJsonAsync<Association>();
+        var response = await httpClient.PostAsJsonAsync("/api/associations", createAssociationCommand);
+
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            return new HooliganResponse<Association, HooliganException>
+            {
+                Error = await response.Content.ReadFromJsonAsync<HooliganException>()
+            };
+        }
+
+        return new HooliganResponse<Association, HooliganException>
+        {
+            Value = await response.Content.ReadFromJsonAsync<Association>()
+        };
     }
 }
 
-public record Association(string First, string Second, string Result, string Icon);
+// ReSharper disable once ClassNeverInstantiated.Global
+public sealed record Association(string? Result, string? Icon);
 
-public record CreateAssociation(string First, string Second);
+public record CreateAssociationCommand(string First, string Second);
