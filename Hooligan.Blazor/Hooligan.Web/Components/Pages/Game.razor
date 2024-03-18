@@ -1,9 +1,9 @@
 ﻿@page "/Game"
 @using Hooligan.Web.Models
-@rendermode InteractiveServer
-
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject IJSRuntime JSRuntime
 @inject HooliganApiClient HooliganApi
+@inject ILocalStorageService LocalStorage
 
 <PageTitle>Game</PageTitle>
 
@@ -11,7 +11,7 @@
 
 <MudDropContainer
     T="DraggableItem"
-    Items="_items"
+    Items="Items"
     ItemsSelector="@((item, dropzone) => item.Identifier == dropzone)"
     ItemDropped="ItemUpdated"
     Class="d-flex flex-wrap flex-grow-1">
@@ -34,8 +34,23 @@
 
 
 @code {
+    private List<DraggableItem> Items = new List<DraggableItem>();
+
+    private List<DraggableItem> OriginalItems = new List<DraggableItem>
+    {
+        new DraggableItem { Name = "earth", Icon = "🌍" },
+        new DraggableItem { Name = "wind", Icon = "🌬️" },
+        new DraggableItem { Name = "fire", Icon = "🔥" },
+        new DraggableItem { Name = "water", Icon = "💧" }
+    };
 
     private DraggableItem? TargetItem { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Items.AddRange(OriginalItems);
+        Items.AddRange(await GetDraggableItemsFromLocalStorage());
+    }
 
     private void HandleDrop(DraggableItem item)
     {
@@ -51,22 +66,30 @@
             var created = await HooliganApi.CreateAssociation(dropItem.Item.Name, TargetItem.Name);
             ArgumentNullException.ThrowIfNull(created);
 
-            _items.Add(new DraggableItem
+            var newDraggableItem = new DraggableItem
             {
                 Name = created.Result,
                 Icon = created.Icon
-            });
+            };
+
+            Items.Add(newDraggableItem);
+
+            var localStorageDraggableItems = await GetDraggableItemsFromLocalStorage();
+            localStorageDraggableItems.Add(newDraggableItem);
+
+            await LocalStorage.SetItemAsync<List<DraggableItem>>("Hooligan.User.Session", localStorageDraggableItems);
         }
 
         TargetItem = null;
     }
 
-    private readonly List<DraggableItem> _items =
-    [
-        new DraggableItem { Name = "earth", Icon = "🌍" },
-        new DraggableItem { Name = "wind", Icon = "🌬️" },
-        new DraggableItem { Name = "fire", Icon = "🔥" },
-        new DraggableItem { Name = "water", Icon = "💧" }
-    ];
-
+    private async Task<List<DraggableItem>> GetDraggableItemsFromLocalStorage()
+    {
+        var localStorageItems = await LocalStorage.GetItemAsync<List<DraggableItem>>("Hooligan.User.Session");
+        if (localStorageItems is not null && localStorageItems.Any())
+        {
+            return localStorageItems.ToList();
+        }
+        return new List<DraggableItem>();
+    }
 }

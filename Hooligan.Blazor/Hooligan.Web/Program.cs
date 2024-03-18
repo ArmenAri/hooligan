@@ -1,6 +1,7 @@
 using Hooligan.Web;
 using Hooligan.Web.Components;
 using MudBlazor.Services;
+using Blazored.LocalStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddOutputCache();
 builder.Services.AddHttpClient<HooliganApiClient>(client => client.BaseAddress = new Uri("http://backend"));
 
 builder.Services.AddMudServices();
+builder.Services.AddBlazoredLocalStorage();
 
 var app = builder.Build();
 
