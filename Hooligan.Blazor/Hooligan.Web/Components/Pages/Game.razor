@@ -21,25 +21,17 @@
     </ChildContent>
 
     <ItemRenderer>
-        <MudPaper ondrop="dropHandler(event)" Elevation="25" Class="pa-4 my-4">@context.Icon @context.Name</MudPaper>
+        <MudPaper
+            @key=@context.Name
+            id="@context.Name"
+            @ondrop="@(() => HandleDrop(@context))"
+            Elevation="25" 
+            Class="pa-4 my-4">@context.Icon @context.Name</MudPaper>
     </ItemRenderer>
 </MudDropContainer>
 
-<script>
-    function dropHandler(event) {
-        event.preventDefault();
-        console.log(event);
-        var droppedItem = event.dataTransfer.getData("text");
-        console.log("Element dropped: TEST !!!! : ", droppedItem);
-    }
-</script>
 
 @code {
-    private void HandleDrop(MudDragAndDropTransactionFinishedEventArgs<DropItem> dropItem)
-    {
-        Console.WriteLine("Hello");
-    }
-
     public class DropItem
     {
         public string Name { get; init; }
@@ -47,20 +39,21 @@
         public string Identifier { get; set; }
     }
 
+    private DropItem? currentDropedItem { get; set; }
+
+    private void HandleDrop(DropItem item)
+    {
+        currentDropedItem = item;
+
+    }
+
     private void ItemUpdated(MudItemDropInfo<DropItem> dropItem)
     {
+        if (currentDropedItem is not null)
+        {
+            //trigger here call API
+        }
         dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
-    }
-
-    private void HandleItemDropped(object sender, DragEventArgs e)
-    {
-        //var droppedItem = args.Payload;
-        //var targetItem = args.TargetItem;
-    }
-
-    private void ItemUpdatedBis(MudDragAndDropTransactionFinishedEventArgs<DropItem> dropItem)
-    {
-        Console.WriteLine(dropItem.Item);
     }
 
     private List<DropItem> _items = new()
