@@ -5,23 +5,26 @@ namespace Hooligan.Web;
 
 public class HooliganApiClient(HttpClient httpClient)
 {
-    public async Task<HooliganResponse<Association, HooliganException>> CreateAssociation(
+    public async Task<HooliganResponse<Association>> CreateAssociation(
         CreateAssociationCommand createAssociationCommand)
     {
-        var response = await httpClient.PostAsJsonAsync("/api/associations", createAssociationCommand);
+        HttpResponseMessage? response;
+
+        try
+        {
+            response = await httpClient.PostAsJsonAsync("/api/associations", createAssociationCommand);
+        }
+        catch
+        {
+            return HooliganResponse<Association>.UnknownException;
+        }
 
         if (response.StatusCode != HttpStatusCode.OK)
         {
-            return new HooliganResponse<Association, HooliganException>
-            {
-                Error = await response.Content.ReadFromJsonAsync<HooliganException>()
-            };
+            return await HooliganResponse<Association>.FromFailure(response);
         }
 
-        return new HooliganResponse<Association, HooliganException>
-        {
-            Value = await response.Content.ReadFromJsonAsync<Association>()
-        };
+        return await HooliganResponse<Association>.FromSuccess(response);
     }
 }
 

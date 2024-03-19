@@ -1,48 +1,36 @@
 ﻿@page "/Game"
 @using Hooligan.Web.Models
+@using Hooligan.Web.Extensions
 @rendermode InteractiveServer
 
 @inject HooliganApiClient HooliganApi
 @inject ISnackbar Snackbar
 
-<PageTitle>Game</PageTitle>
+<MudSnackbarProvider/>
 
-<h1>Hooligan Infinite Craft Game</h1>
+<PageTitle>Game</PageTitle>
 
 <MudDropContainer
     T="Item"
     Items="_items"
     ItemsSelector="@((item, dropzone) => item.Identifier == dropzone)"
-    ItemDropped="ItemUpdated"
-    Class="d-flex flex-wrap flex-grow-1">
+    ItemDropped="ItemUpdated">
     <ChildContent>
-        <MudDropZone T="Item" Identifier="@Identifiers.Discoveries.ToString()" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
-            <MudText Typo="Typo.h6" Class="mb-4">@Identifiers.Discoveries.ToString()</MudText>
-        </MudDropZone>
+        <MudDropZone T="Item" Identifier="@Identifiers.Discoveries.ToString()" Class="d-flex flex-wrap"/>
     </ChildContent>
     <ItemRenderer>
         <MudPaper
             @key="@context.Name"
             id="@context.Name"
-            @ondrop="@(() => HandleDrop(@context))"
+            @ondrop="@(() => HandleDrop(context))"
             Elevation="25"
-            Class="pa-4 my-4">
-            @context.Icon @context.Name.ToUpperInvariant()
+            Class="pa-4 m-2">
+            @context.Icon @context.Name.ToUpperOnlyFirstCharacter()
         </MudPaper>
     </ItemRenderer>
 </MudDropContainer>
-<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => Snackbar.Add("Simple Snackbar"))">
-    Open Snackbar
-</MudButton>
 
 @code {
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
-    }
-
     private Item? TargetItem { get; set; }
 
     private void HandleDrop(Item item)
