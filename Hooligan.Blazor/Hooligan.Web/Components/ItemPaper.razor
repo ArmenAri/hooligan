@@ -1,0 +1,31 @@
+﻿@using Hooligan.Web.Models
+
+<MudPaper id="@ChildContent.Id"
+          @key="@ChildContent.Name"
+          @ondrop="@(() => LocalHandleDrop(ChildContent))"
+          Elevation="25"
+          Class="pa-4 m-2">
+          @ChildContent.Icon @ChildContent.Name.ToUpperInvariant()
+    <!--<MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" @onclick="@(() =>LocalDeleteCurentItem(ChildContent.Id))" />-->
+</MudPaper>
+
+@code {
+    [Parameter]
+    public DraggableItem ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback<DraggableItem> OnDropCallBack { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnDeleteCallBack { get; set; }
+
+    public async void LocalHandleDrop(DraggableItem item)
+    {
+        await OnDropCallBack.InvokeAsync(item);
+    }
+
+    public async void LocalDeleteCurentItem(Guid itemGuid)
+    {
+        await OnDeleteCallBack.InvokeAsync(itemGuid);
+    }
+}

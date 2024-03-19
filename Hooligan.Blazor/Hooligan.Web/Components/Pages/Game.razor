@@ -16,21 +16,12 @@
     ItemDropped="ItemUpdated"
     Class="d-flex flex-wrap flex-grow-1">
     <ChildContent>
-        <MudDropZone T="DraggableItem" Identifier="@Identifiers.Discoveries.ToString()" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
-            <MudText Typo="Typo.h6" Class="mb-4">@Identifiers.Discoveries.ToString()</MudText>
+        <MudDropZone T="DraggableItem" Identifier="@Identifiers.Discoveries.ToString()" Class="rounded mud-background-gray pa-10 my-8 d-flex flew-row flex-lg-wrap">
+            <ItemRenderer>
+                <ItemPaper ChildContent="@context" OnDropCallBack="HandleDrop" OnDeleteCallBack="DeleteCurrentItem" />
+            </ItemRenderer>
         </MudDropZone>
-    </ChildContent>
-    <ItemRenderer>
-        <MudPaper 
-            id="@context.Id"
-            @key="@context.Name"
-            @ondrop="@(() => HandleDrop(@context))"
-            Elevation="25"
-            Class="pa-4 my-4">
-            @context.Icon @context.Name.ToUpperInvariant()
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" @onclick="@(() => DeleteCurrentItem(context.Id))" />
-        </MudPaper>
-    </ItemRenderer>
+    </ChildContent>   
 </MudDropContainer>
 
 
@@ -53,7 +44,7 @@
         Items.AddRange(await GetDraggableItemsFromLocalStorage());
     }
 
-    private void HandleDrop(DraggableItem item)
+    public void HandleDrop(DraggableItem item)
     {
         TargetItem = item;
     }
