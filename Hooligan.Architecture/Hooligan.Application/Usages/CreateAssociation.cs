@@ -1,24 +1,28 @@
 using Hooligan.Application.Interfaces;
+using Hooligan.Application.Messaging;
 using Hooligan.Application.Structures;
 using Hooligan.Domain;
-using MediatR;
+using Hooligan.Domain.Exceptions;
+using Hooligan.Domain.Primitives;
+using LanguageExt.Common;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hooligan.Application.Usages;
 
-public sealed record CreateAssociation(string First, string Second) : IRequest<Association>, INormalizeProperties;
+public sealed record CreateAssociation(string First, string Second) : ICommand<Association>, INormalizeProperties;
 
 public sealed class CreateAssociationHandler(
     IAssociationRepository associationRepository,
     [FromKeyedServices(ServiceKeys.Eden)] IExternalAssociationProvider externalAssociationProvider)
-    : IRequestHandler<CreateAssociation, Association>
+    : ICommandHandler<CreateAssociation, Association>
 {
-    public async Task<Association> Handle(CreateAssociation request, CancellationToken cancellationToken)
+    public async Task<Result<Association>> Handle(CreateAssociation request, CancellationToken cancellationToken)
     {
         var canCraft = await associationRepository.CanBeUsedAsync(request.First, request.Second, cancellationToken);
         if (!canCraft)
         {
-            throw new ArgumentException("One of the items has not been discovered yet");
+            return new Result<Association>(new BadRequestException(HooliganErrors.NotYetDiscovered,
+                "One of the items has not been discovered yet"));
         }
 
         var association = await associationRepository.ExistsAsync(request.First, request.Second, cancellationToken);
@@ -35,7 +39,8 @@ public sealed class CreateAssociationHandler(
 
         if (@new is null)
         {
-            throw new ArgumentException($"Cannot retrieve association from {externalAssociationProvider.GetType()}");
+            return new Result<Association>(new InternalServerException(HooliganErrors.ExternalProviderUnavailable,
+                $"An error occured when using {externalAssociationProvider.GetType()}"));
         }
 
         await associationRepository.CreateAsync(@new, cancellationToken);

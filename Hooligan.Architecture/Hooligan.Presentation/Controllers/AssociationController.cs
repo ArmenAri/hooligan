@@ -1,5 +1,6 @@
 using Hooligan.Application.Usages;
 using Hooligan.Domain;
+using Hooligan.Presentation.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ public class AssociationController(ISender mediator) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Association>> Post([FromBody] CreateAssociation association)
     {
-        return await mediator.Send(association);
+        var result = await mediator.Send(association);
+        return result.Match(Ok);
     }
 }

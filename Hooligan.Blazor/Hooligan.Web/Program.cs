@@ -1,5 +1,6 @@
 using Hooligan.Web;
 using Hooligan.Web.Components;
+using MudBlazor;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +16,10 @@ builder.Services.AddOutputCache();
 
 builder.Services.AddHttpClient<HooliganApiClient>(client => client.BaseAddress = new Uri("http://backend"));
 
-builder.Services.AddMudServices();
+builder.Services.AddMudServices(c =>
+{
+    c.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;
+});
 
 var app = builder.Build();
 
