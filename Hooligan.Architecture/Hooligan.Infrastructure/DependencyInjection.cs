@@ -2,6 +2,7 @@ using Hooligan.Application.Interfaces;
 using Hooligan.Application.Structures;
 using Hooligan.Infrastructure.Clients;
 using Hooligan.Infrastructure.Context;
+using Hooligan.Infrastructure.GrpcService;
 using Hooligan.Infrastructure.Implementations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,9 @@ public static class DependencyInjection
 
         services.AddKeyedScoped<IExternalAssociationProvider, FakerAssociationProvider>(ServiceKeys.Faker);
         services.AddKeyedScoped<IExternalAssociationProvider, EdenAssociationProvider>(ServiceKeys.Eden);
+
+        services.AddGrpc();
+        services.AddSingleton<NotificationService>();
 
         return services.AddDbContext<HooliganDbContext>(options =>
             options.UseSqlite(configuration.GetConnectionString("HooliganConnectionString"))

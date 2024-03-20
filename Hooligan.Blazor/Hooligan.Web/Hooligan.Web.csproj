@@ -8,8 +8,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Google.Protobuf" Version="3.26.0" />
+      <PackageReference Include="Grpc.Net.Client" Version="2.62.0-pre1" />
+      <PackageReference Include="Grpc.Net.Client.Web" Version="2.62.0-pre1" />
+      <PackageReference Include="Grpc.Tools" Version="2.62.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="MudBlazor" Version="6.17.0" />
     </ItemGroup>
+	
+	<ItemGroup>
+		<Protobuf Include="ProtoBuf\Notification.proto" GrpcServices="Client" Access="Internal"/>
+	</ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Hooligan.Aspire\Hooligan.ServiceDefaults\Hooligan.ServiceDefaults.csproj" />

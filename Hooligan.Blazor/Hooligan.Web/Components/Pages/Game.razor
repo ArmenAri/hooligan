@@ -1,7 +1,9 @@
 ﻿@page "/Game"
+@using Grpc.Net.Client
 @using Hooligan.Web.Models
 @using Hooligan.Web.Extensions
-@rendermode InteractiveServer
+@inject GrpcChannel Channel
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @inject HooliganApiClient HooliganApi
 @inject ISnackbar Snackbar
@@ -38,6 +40,12 @@
         TargetItem = item;
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+        await SubscribeToNotifications();
+    }
+
     private async Task ItemUpdated(MudItemDropInfo<Item> dropItem)
     {
         ArgumentNullException.ThrowIfNull(dropItem.Item);
@@ -58,10 +66,10 @@
             {
                 _items.Add(new Item
                 {
-#pragma warning disable CS8601 // Possible null reference assignment.
+                    #pragma warning disable CS8601 // Possible null reference assignment.
                     Name = response.Value?.Result,
                     Icon = response.Value?.Icon
-#pragma warning restore CS8601 // Possible null reference assignment.
+                    #pragma warning restore CS8601 // Possible null reference assignment.
                 });
             }
         }
@@ -76,5 +84,16 @@
         new Item { Name = "fire", Icon = "🔥" },
         new Item { Name = "water", Icon = "💧" }
     ];
+
+
+    private async Task SubscribeToNotifications()
+    {
+        var client = new Protos.Notification.NotificationClient(Channel);
+        var sendNotificationRequest = new Protos.NotificationRequest { Message = "Hello, test from client"};
+
+        var reply = await client.SendNotificationAsync(sendNotificationRequest);
+
+        Console.WriteLine(reply.Message);
+    }
 
 }

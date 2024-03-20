@@ -1,3 +1,5 @@
+using Grpc.Net.Client;
+using Grpc.Net.Client.Web;
 using Hooligan.Web;
 using Hooligan.Web.Components;
 using MudBlazor;
@@ -14,7 +16,15 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddOutputCache();
 
-builder.Services.AddHttpClient<HooliganApiClient>(client => client.BaseAddress = new Uri("http://backend"));
+builder.Services.AddHttpClient<HooliganApiClient>(client => client.BaseAddress = new Uri("http://localhost:7258"));
+
+//Add gRPC service
+builder.Services.AddSingleton(services =>
+{
+    var backendUrl = "http://localhost:7260";
+    var httpHandler = new GrpcWebHandler(GrpcWebMode.GrpcWebText, new HttpClientHandler());
+    return GrpcChannel.ForAddress(backendUrl, new GrpcChannelOptions { HttpHandler = httpHandler });
+});
 
 builder.Services.AddMudServices(c =>
 {
