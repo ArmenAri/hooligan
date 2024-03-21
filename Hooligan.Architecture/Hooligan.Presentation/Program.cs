@@ -1,4 +1,3 @@
-using Hooligan.Infrastructure.GrpcService;
 using Hooligan.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +27,4 @@ var app = builder.Build();
     app.UseHttpsRedirection();
 }
 
-app.UseGrpcWeb();
-app.MapGrpcService<NotificationService>().EnableGrpcWeb();
 app.Run();

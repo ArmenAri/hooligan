@@ -1,6 +1,5 @@
 ﻿using Grpc.Core;
-using GrpcServer;
-using Microsoft.Extensions.Logging;
+using ProtosGrpc;
 
 namespace Hooligan.Infrastructure.GrpcService
 {

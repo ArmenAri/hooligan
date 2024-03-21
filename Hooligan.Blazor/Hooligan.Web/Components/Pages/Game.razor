@@ -1,8 +1,7 @@
 ﻿@page "/Game"
-@using Grpc.Net.Client
-@using Hooligan.Web.Models
-@using Hooligan.Web.Extensions
-@inject GrpcChannel Channel
+@using ProtosGrpc
+@using Google.Protobuf.WellKnownTypes
+@inject Notification.NotificationClient client;
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @inject HooliganApiClient HooliganApi
@@ -88,8 +87,7 @@
 
     private async Task SubscribeToNotifications()
     {
-        var client = new Protos.Notification.NotificationClient(Channel);
-        var sendNotificationRequest = new Protos.NotificationRequest { Message = "Hello, test from client"};
+        var sendNotificationRequest = new ProtosGrpc.NotificationRequest { Message = "Hello, test from client" };
 
         var reply = await client.SendNotificationAsync(sendNotificationRequest);
 

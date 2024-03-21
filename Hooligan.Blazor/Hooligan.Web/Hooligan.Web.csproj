@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -8,18 +8,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Google.Protobuf" Version="3.26.0" />
-      <PackageReference Include="Grpc.Net.Client" Version="2.62.0-pre1" />
-      <PackageReference Include="Grpc.Net.Client.Web" Version="2.62.0-pre1" />
-      <PackageReference Include="Grpc.Tools" Version="2.62.0">
+		<PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
+		<PackageReference Include="Google.Protobuf" Version="3.26.0" />
+		<PackageReference Include="Grpc.Net.Client.Web" Version="2.62.0-pre1" />
+        <PackageReference Include="Grpc.Net.ClientFactory" Version="2.59.0" />
+        <PackageReference Include="Grpc.Tools" Version="2.62.0">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="MudBlazor" Version="6.17.0" />
+        </PackageReference>
+      <PackageReference Include="MudBlazor" Version="6.18.0" />
     </ItemGroup>
 	
 	<ItemGroup>
-		<Protobuf Include="ProtoBuf\Notification.proto" GrpcServices="Client" Access="Internal"/>
+		<Protobuf Include="..\..\Hooligan.Grpc\Protos\Notification.proto" GrpcServices="Client" Access="Internal">
+		  <Link>Protos\Notification.proto</Link>
+		</Protobuf>
 	</ItemGroup>
 
     <ItemGroup>
