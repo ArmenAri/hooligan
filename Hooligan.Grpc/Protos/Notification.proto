@@ -6,6 +6,7 @@ package Notification;
 
 service Notification {
   rpc SendNotification(NotificationRequest) returns (NotificationResponse);
+  rpc Subscribe(SubscribeRequest) returns (stream NotificationStreamResponse);
 }
 
 message NotificationRequest {
@@ -14,4 +15,12 @@ message NotificationRequest {
 
 message NotificationResponse {
   string message = 1;
+}
+
+message SubscribeRequest {
+	string message = 1;
+}
+
+message NotificationStreamResponse {
+	string message = 1;
 }

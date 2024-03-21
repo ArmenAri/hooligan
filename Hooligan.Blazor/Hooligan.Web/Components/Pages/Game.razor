@@ -1,4 +1,5 @@
 ﻿@page "/Game"
+@using Grpc.Core
 @using ProtosGrpc
 @using Google.Protobuf.WellKnownTypes
 @inject Notification.NotificationClient client;
@@ -41,8 +42,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        base.OnInitializedAsync();
-        await SubscribeToNotifications();
+        await base.OnInitializedAsync();
+
+        var sendNotificationRequest = new ProtosGrpc.SubscribeRequest { Message = "Hello, I'd like to subscribe" };
+        var subscription = client.Subscribe(sendNotificationRequest);
+
+        await foreach (var notification in subscription.ResponseStream.ReadAllAsync())
+        {
+            Snackbar.Add(notification?.Message.ToString(), Severity.Success, options => { options.SuccessIcon = Icons.Material.Filled.Backpack; });
+            StateHasChanged();
+        }
     }
 
     private async Task ItemUpdated(MudItemDropInfo<Item> dropItem)
@@ -79,19 +88,8 @@
     private readonly List<Item> _items =
     [
         new Item { Name = "earth", Icon = "🌍" },
-        new Item { Name = "wind", Icon = "🌬️" },
-        new Item { Name = "fire", Icon = "🔥" },
-        new Item { Name = "water", Icon = "💧" }
+    new Item { Name = "wind", Icon = "🌬️" },
+    new Item { Name = "fire", Icon = "🔥" },
+    new Item { Name = "water", Icon = "💧" }
     ];
-
-
-    private async Task SubscribeToNotifications()
-    {
-        var sendNotificationRequest = new ProtosGrpc.NotificationRequest { Message = "Hello, test from client" };
-
-        var reply = await client.SendNotificationAsync(sendNotificationRequest);
-
-        Console.WriteLine(reply.Message);
-    }
-
 }
