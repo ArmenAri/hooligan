@@ -1,26 +1,13 @@
 syntax = "proto3";
 
-option csharp_namespace = "ProtosGrpc";
+import "google/protobuf/empty.proto";
 
-package Notification;
+option csharp_namespace = "HooliganNotification";
 
-service Notification {
-  rpc SendNotification(NotificationRequest) returns (NotificationResponse);
-  rpc Subscribe(SubscribeRequest) returns (stream NotificationStreamResponse);
+service NotificationService  {
+  rpc Subscribe(google.protobuf.Empty) returns (stream Notification);
 }
 
-message NotificationRequest {
-  string message = 1;
-}
-
-message NotificationResponse {
-  string message = 1;
-}
-
-message SubscribeRequest {
-	string message = 1;
-}
-
-message NotificationStreamResponse {
+message Notification {
 	string message = 1;
 }

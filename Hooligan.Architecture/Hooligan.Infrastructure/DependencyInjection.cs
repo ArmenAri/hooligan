@@ -26,17 +26,15 @@ public static class DependencyInjection
         services.AddKeyedScoped<IExternalAssociationProvider, FakerAssociationProvider>(ServiceKeys.Faker);
         services.AddKeyedScoped<IExternalAssociationProvider, EdenAssociationProvider>(ServiceKeys.Eden);
 
-        Task.Delay(TimeSpan.FromSeconds(1));
+        services.AddScoped<IAssociationNotifier, AssociationNotifier>();
         services.AddMassTransit(x =>
         {
             x.UsingRabbitMq((context, cfg) =>
             {
-                cfg.Host(configuration.GetConnectionString("messaging")); //messaging comes from the Env variable provided by Aspire
+                cfg.Host(configuration.GetConnectionString("messaging"));
                 cfg.ConfigureEndpoints(context);
             });
         });
-
-        services.AddHostedService<Worker>();
 
         return services.AddDbContext<HooliganDbContext>(options =>
             options.UseSqlite(configuration.GetConnectionString("HooliganConnectionString"))

@@ -4,6 +4,7 @@ using Hooligan.Application.Structures;
 using Hooligan.Domain;
 using Hooligan.Domain.Exceptions;
 using Hooligan.Domain.Primitives;
+using Hooligan.Messages;
 using LanguageExt.Common;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +14,8 @@ public sealed record CreateAssociation(string First, string Second) : ICommand<A
 
 public sealed class CreateAssociationHandler(
     IAssociationRepository associationRepository,
-    [FromKeyedServices(ServiceKeys.Eden)] IExternalAssociationProvider externalAssociationProvider)
+    [FromKeyedServices(ServiceKeys.Eden)] IExternalAssociationProvider externalAssociationProvider,
+    IAssociationNotifier associationNotifier)
     : ICommandHandler<CreateAssociation, Association>
 {
     public async Task<Result<Association>> Handle(CreateAssociation request, CancellationToken cancellationToken)
@@ -44,6 +46,7 @@ public sealed class CreateAssociationHandler(
         }
 
         await associationRepository.CreateAsync(@new, cancellationToken);
+        await associationNotifier.NotifyNew(new NewAssociation(@new.Result));
 
         return @new;
     }

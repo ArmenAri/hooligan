@@ -3,7 +3,7 @@ using Hooligan.Web;
 using Hooligan.Web.Components;
 using MudBlazor;
 using MudBlazor.Services;
-using ProtosGrpc;
+using HooliganNotification;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +18,7 @@ builder.Services.AddOutputCache();
 
 builder.Services.AddHttpClient<HooliganApiClient>(client => client.BaseAddress = new Uri("http://backend"));
 
-builder.Services.AddGrpcClient<Notification.NotificationClient>(options => { options.Address = new Uri("http://grpc"); })
+builder.Services.AddGrpcClient<NotificationService.NotificationServiceClient>(options => { options.Address = new Uri("http://grpc"); })
                 .ConfigurePrimaryHttpMessageHandler( () => new GrpcWebHandler(new HttpClientHandler()) );
   
 builder.Services.AddMudServices(c =>

@@ -1,33 +1,29 @@
-﻿using Grpc.Core;
-using ProtosGrpc;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
+using HooliganNotification;
 
-namespace Hooligan.Infrastructure.GrpcService
+namespace Hooligan.Grpc.Services;
+
+public class NotificationService : HooliganNotification.NotificationService.NotificationServiceBase
 {
-    public class NotificationService : Notification.NotificationBase
+    private readonly Queue<string> _notifications = [];
+
+    public override async Task Subscribe(Empty request,
+        IServerStreamWriter<Notification> responseStream, ServerCallContext context)
     {
-        private readonly ILogger<NotificationService> _logger;
-        public NotificationService(ILogger<NotificationService> logger)
+        while (!context.CancellationToken.IsCancellationRequested)
         {
-            _logger = logger;
-        }
-
-        public override Task<NotificationResponse> SendNotification(NotificationRequest request, ServerCallContext context)
-        {
-            return Task.FromResult(new NotificationResponse
+            var canDequeue = _notifications.TryDequeue(out var notification);
+            if (canDequeue)
             {
-                Message = "This a test answer !"
-            });
-        }
-
-        public async override Task Subscribe(SubscribeRequest request, IServerStreamWriter<NotificationStreamResponse> responseStream, ServerCallContext context)
-        {
-            while (!context.CancellationToken.IsCancellationRequested)
-            {
-                await Task.Delay(TimeSpan.FromSeconds(5)); // Attendre 15 secondes
-
-                // Envoyer une notification au client
-                await responseStream.WriteAsync(new NotificationStreamResponse { Message = "Nouvelle notification" });
+                await responseStream.WriteAsync(new Notification { Message = notification });
             }
         }
+    }
+
+    // Method to send a new notification
+    public void SendNotification(string message)
+    {
+        _notifications.Enqueue(message);
     }
 }

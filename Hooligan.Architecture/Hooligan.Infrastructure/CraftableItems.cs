@@ -36,7 +36,7 @@ public class CraftableItems : IQueryable<string>, IAsyncEnumerable<string>
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return _queryableItems.GetEnumerator();
+        return GetEnumerator();
     }
 
     public IAsyncEnumerator<string> GetAsyncEnumerator(CancellationToken cancellationToken = default)

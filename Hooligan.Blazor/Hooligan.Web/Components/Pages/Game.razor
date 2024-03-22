@@ -1,8 +1,8 @@
 ﻿@page "/Game"
 @using Grpc.Core
-@using ProtosGrpc
+@using HooliganNotification
 @using Google.Protobuf.WellKnownTypes
-@inject Notification.NotificationClient client;
+@inject NotificationService.NotificationServiceClient Client;
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @inject HooliganApiClient HooliganApi
@@ -44,12 +44,11 @@
     {
         await base.OnInitializedAsync();
 
-        var sendNotificationRequest = new ProtosGrpc.SubscribeRequest { Message = "Hello, I'd like to subscribe" };
-        var subscription = client.Subscribe(sendNotificationRequest);
+        var subscription = Client.Subscribe(new Empty());
 
         await foreach (var notification in subscription.ResponseStream.ReadAllAsync())
         {
-            Snackbar.Add(notification?.Message.ToString(), Severity.Success, options => { options.SuccessIcon = Icons.Material.Filled.Backpack; });
+            Snackbar.Add(notification?.Message, Severity.Success, options => { options.SuccessIcon = Icons.Material.Filled.Backpack; });
             StateHasChanged();
         }
     }
@@ -74,10 +73,10 @@
             {
                 _items.Add(new Item
                 {
-                    #pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
                     Name = response.Value?.Result,
                     Icon = response.Value?.Icon
-                    #pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
                 });
             }
         }
@@ -88,8 +87,9 @@
     private readonly List<Item> _items =
     [
         new Item { Name = "earth", Icon = "🌍" },
-    new Item { Name = "wind", Icon = "🌬️" },
-    new Item { Name = "fire", Icon = "🔥" },
-    new Item { Name = "water", Icon = "💧" }
+        new Item { Name = "wind", Icon = "🌬️" },
+        new Item { Name = "fire", Icon = "🔥" },
+        new Item { Name = "water", Icon = "💧" }
     ];
+
 }
