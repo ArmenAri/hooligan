@@ -4,7 +4,8 @@ using Hooligan.Application.Structures;
 using Hooligan.Domain;
 using Hooligan.Domain.Exceptions;
 using Hooligan.Domain.Primitives;
-using Hooligan.Messages;
+using Hooligan.Common;
+using Hooligan.Common.Messages;
 using LanguageExt.Common;
 using Microsoft.Extensions.DependencyInjection;
 

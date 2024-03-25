@@ -23,10 +23,10 @@ public class CraftableItems : IQueryable<string>, IAsyncEnumerable<string>
 
     private static readonly string[] OriginalItems =
     [
-        "earth",
-        "water",
-        "wind",
-        "fire"
+        "Earth",
+        "Water",
+        "Wind",
+        "Fire"
     ];
 
     public IEnumerator<string> GetEnumerator()

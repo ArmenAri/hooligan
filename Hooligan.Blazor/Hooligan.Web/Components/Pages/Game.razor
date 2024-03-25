@@ -27,7 +27,7 @@
             @ondrop="@(() => HandleDrop(context))"
             Elevation="25"
             Class="pa-4 m-2">
-            @context.Icon @context.Name.ToUpperOnlyFirstCharacter()
+            @context.Icon @context.Name.ToUpperOnlyFirstCharacterInvariant()
         </MudPaper>
     </ItemRenderer>
 </MudDropContainer>

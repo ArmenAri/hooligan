@@ -28,7 +28,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hooligan.Grpc", "Hooligan.G
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{83FF547A-89A1-49BC-9C22-C67D5E0B61FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hooligan.Messages", "Hooligan.BuildingBlocks\Hooligan.Messages\Hooligan.Messages.csproj", "{F6991FBD-5F92-4940-B192-20E2FA9F2D51}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hooligan.Common", "Hooligan.BuildingBlocks\Hooligan.Common\Hooligan.Common.csproj", "{F6991FBD-5F92-4940-B192-20E2FA9F2D51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

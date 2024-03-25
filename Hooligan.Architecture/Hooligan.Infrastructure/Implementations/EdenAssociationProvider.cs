@@ -1,4 +1,5 @@
 ﻿using Hooligan.Application.Interfaces;
+using Hooligan.Common.Extensions;
 using Hooligan.Domain;
 using Hooligan.Infrastructure.Clients;
 
@@ -19,7 +20,7 @@ public sealed class EdenAssociationProvider(EdenApiClient edenApiClient) : IExte
         {
             First = first,
             Second = second,
-            Result = edenResponse.OpenAi.GeneratedText.Result.ToLowerInvariant(),
+            Result = edenResponse.OpenAi.GeneratedText.Result.ToUpperOnlyFirstCharacterInvariant(),
             Icon = edenResponse.OpenAi.GeneratedText.Icon
         };
 

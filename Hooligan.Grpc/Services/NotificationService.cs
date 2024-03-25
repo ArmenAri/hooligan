@@ -4,7 +4,7 @@ using HooliganNotification;
 
 namespace Hooligan.Grpc.Services;
 
-public class NotificationService : HooliganNotification.NotificationService.NotificationServiceBase
+public sealed class NotificationService : HooliganNotification.NotificationService.NotificationServiceBase
 {
     private readonly Queue<string> _notifications = [];
 
@@ -14,10 +14,13 @@ public class NotificationService : HooliganNotification.NotificationService.Noti
         while (!context.CancellationToken.IsCancellationRequested)
         {
             var canDequeue = _notifications.TryDequeue(out var notification);
-            if (canDequeue)
+
+            if (!canDequeue)
             {
-                await responseStream.WriteAsync(new Notification { Message = notification });
+                continue;
             }
+
+            await responseStream.WriteAsync(new Notification { Message = notification }, context.CancellationToken);
         }
     }
 

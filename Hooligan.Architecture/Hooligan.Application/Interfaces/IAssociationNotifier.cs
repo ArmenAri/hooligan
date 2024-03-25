@@ -1,5 +1,5 @@
-using Hooligan.Domain;
-using Hooligan.Messages;
+using Hooligan.Common;
+using Hooligan.Common.Messages;
 
 namespace Hooligan.Application.Interfaces;
 

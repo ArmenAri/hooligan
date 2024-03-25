@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hooligan.Aspire\Hooligan.ServiceDefaults\Hooligan.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\Hooligan.BuildingBlocks\Hooligan.Messages\Hooligan.Messages.csproj" />
+    <ProjectReference Include="..\Hooligan.BuildingBlocks\Hooligan.Common\Hooligan.Common.csproj" />
   </ItemGroup>
 
 </Project>
