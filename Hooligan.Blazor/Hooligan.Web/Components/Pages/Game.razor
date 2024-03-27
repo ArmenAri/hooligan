@@ -46,9 +46,9 @@
 
         var subscription = Client.Subscribe(new Empty());
 
-        await foreach (var notification in subscription.ResponseStream.ReadAllAsync())
+        while (await subscription.ResponseStream.MoveNext())
         {
-            Snackbar.Add(notification?.Message, Severity.Success, options => { options.SuccessIcon = Icons.Material.Filled.Backpack; });
+            Snackbar.Add(subscription.ResponseStream.Current.Message, Severity.Success, options => { options.SuccessIcon = Icons.Material.Filled.Backpack; });
             StateHasChanged();
         }
     }

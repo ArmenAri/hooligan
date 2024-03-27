@@ -15,7 +15,7 @@ public sealed class NotificationService : HooliganNotification.NotificationServi
         {
             var canDequeue = _notifications.TryDequeue(out var notification);
 
-            if (!canDequeue)
+            if (!canDequeue || notification is null)
             {
                 continue;
             }
