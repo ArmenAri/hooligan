@@ -15,7 +15,7 @@ builder.Services.AddMassTransit(x =>
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host(builder.Configuration.GetConnectionString("messaging"));
+        cfg.Host(Environment.GetEnvironmentVariable("rabbitmqConnectionString"));
         cfg.ConfigureEndpoints(context);
     });
 });

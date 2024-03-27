@@ -31,7 +31,7 @@ public static class DependencyInjection
         {
             x.UsingRabbitMq((context, cfg) =>
             {
-                cfg.Host(configuration.GetConnectionString("messaging"));
+                cfg.Host(Environment.GetEnvironmentVariable("rabbitmqConnectionString"));
                 cfg.ConfigureEndpoints(context);
             });
         });
