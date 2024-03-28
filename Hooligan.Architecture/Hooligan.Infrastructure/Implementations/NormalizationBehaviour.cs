@@ -1,4 +1,5 @@
 ﻿using Hooligan.Application.Interfaces;
+using Hooligan.Common.Extensions;
 using MediatR;
 
 namespace Hooligan.Infrastructure.Implementations;
@@ -25,7 +26,7 @@ public class NormalizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
 
             if (!string.IsNullOrEmpty(value))
             {
-                property.SetValue(request, value.ToLowerInvariant());
+                property.SetValue(request, value.ToUpperOnlyFirstCharacterInvariant());
             }
         }
 

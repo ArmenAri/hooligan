@@ -1,4 +1,4 @@
-namespace Hooligan.Web.Extensions;
+namespace Hooligan.Web.Client.Extensions;
 
 public static class StringExtensions
 {

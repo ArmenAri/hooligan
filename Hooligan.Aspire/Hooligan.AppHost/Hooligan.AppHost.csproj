@@ -9,13 +9,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Hosting" Version="9.0.0-preview.1.24113.3"/>
+        <PackageReference Include="Aspire.Hosting" Version="8.0.0-preview.4.24156.9" />
+        <PackageReference Include="Aspire.RabbitMQ.Client" Version="9.0.0-preview.2.24162.2" />
         <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="9.0.0-preview.2.24162.2" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Hooligan.Architecture\Hooligan.Presentation\Hooligan.Presentation.csproj" />
       <ProjectReference Include="..\..\Hooligan.Blazor\Hooligan.Web\Hooligan.Web.csproj" />
+      <ProjectReference Include="..\..\Hooligan.Grpc\Hooligan.Grpc.csproj" />
+      <ProjectReference Include="..\..\Hooligan.Blazor\Hooligan.Web.Client\Hooligan.Web.Client.csproj" />
     </ItemGroup>
 
 </Project>

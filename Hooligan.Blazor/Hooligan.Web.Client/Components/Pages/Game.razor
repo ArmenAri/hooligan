@@ -1,11 +1,15 @@
 ﻿@page "/Game"
-@using Hooligan.Web.Models
-@using Hooligan.Web.Extensions
-@rendermode InteractiveServer
+@using Hooligan.Web.Client.Models
+@using HooliganNotification
+@using Google.Protobuf.WellKnownTypes
+@using Grpc.Core
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
+@inject NotificationService.NotificationServiceClient Client
 @inject HooliganApiClient HooliganApi
 @inject ISnackbar Snackbar
 
+<MudDialogProvider/>
 <MudSnackbarProvider/>
 
 <PageTitle>Game</PageTitle>
@@ -25,7 +29,7 @@
             @ondrop="@(() => HandleDrop(context))"
             Elevation="25"
             Class="pa-4 m-2">
-            @context.Icon @context.Name.ToUpperOnlyFirstCharacter()
+            @context.Icon @context.Name.ToUpperOnlyFirstCharacterInvariant()
         </MudPaper>
     </ItemRenderer>
 </MudDropContainer>
@@ -36,6 +40,26 @@
     private void HandleDrop(Item item)
     {
         TargetItem = item;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var subscription = Client.Subscribe(new Empty());
+
+        try
+        {
+            await foreach (var notification in subscription.ResponseStream.ReadAllAsync())
+            {
+                Snackbar.Add(notification.Message, Severity.Success, options => { options.SuccessIcon = Icons.Material.Filled.Backpack; });
+                StateHasChanged();
+            }
+        }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.Cancelled)
+        {
+            // ignored
+        }
     }
 
     private async Task ItemUpdated(MudItemDropInfo<Item> dropItem)
