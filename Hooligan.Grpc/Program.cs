@@ -1,6 +1,6 @@
 using Hooligan.Grpc.Consumers;
-using Hooligan.Grpc.Services;
 using MassTransit;
+using NotificationService = Hooligan.Grpc.Services.NotificationService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,10 +12,13 @@ builder.Services.AddSingleton<NotificationService>();
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<AssociationConsumer>();
-
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host(Environment.GetEnvironmentVariable("rabbitmqConnectionString"));
+        var connectionString = builder.Configuration.GetConnectionString("messaging");
+        if (connectionString is not null)
+        {
+            cfg.Host(new Uri(connectionString));
+        }
         cfg.ConfigureEndpoints(context);
     });
 });

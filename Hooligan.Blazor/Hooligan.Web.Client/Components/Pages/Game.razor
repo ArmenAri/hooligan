@@ -1,13 +1,15 @@
 ﻿@page "/Game"
-@using Grpc.Core
+@using Hooligan.Web.Client.Models
 @using HooliganNotification
 @using Google.Protobuf.WellKnownTypes
-@inject NotificationService.NotificationServiceClient Client;
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@using Grpc.Core
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
+@inject NotificationService.NotificationServiceClient Client
 @inject HooliganApiClient HooliganApi
 @inject ISnackbar Snackbar
 
+<MudDialogProvider/>
 <MudSnackbarProvider/>
 
 <PageTitle>Game</PageTitle>
@@ -46,10 +48,17 @@
 
         var subscription = Client.Subscribe(new Empty());
 
-        while (await subscription.ResponseStream.MoveNext())
+        try
         {
-            Snackbar.Add(subscription.ResponseStream.Current.Message, Severity.Success, options => { options.SuccessIcon = Icons.Material.Filled.Backpack; });
-            StateHasChanged();
+            await foreach (var notification in subscription.ResponseStream.ReadAllAsync())
+            {
+                Snackbar.Add(notification.Message, Severity.Success, options => { options.SuccessIcon = Icons.Material.Filled.Backpack; });
+                StateHasChanged();
+            }
+        }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.Cancelled)
+        {
+            // ignored
         }
     }
 

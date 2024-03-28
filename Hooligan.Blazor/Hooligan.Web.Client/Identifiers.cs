@@ -1,4 +1,4 @@
-namespace Hooligan.Web;
+namespace Hooligan.Web.Client;
 
 public enum Identifiers
 {
