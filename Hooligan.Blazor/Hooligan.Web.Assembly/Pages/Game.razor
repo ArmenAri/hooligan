@@ -7,7 +7,7 @@
 @inject ISnackbar SnackBar
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-<MudSnackbarProvider />
+<MudSnackbarProvider/>
 
 <PageTitle>Game</PageTitle>
 
@@ -42,11 +42,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
-        var headers = new Metadata();
-        headers.Add("Access-Control-Allow-Origin", "http://localhost:5044/");
-
-        var subscription = Client.Subscribe(new Empty(), headers: headers);
+        var subscription = Client.Subscribe(new Empty());
 
         try
         {
@@ -56,7 +52,7 @@
                 StateHasChanged();
             }
         }
-        catch(RpcException)
+        catch (RpcException)
         {
             // ignored
         }
@@ -82,10 +78,10 @@
             {
                 _items.Add(new Item
                 {
-                    #pragma warning disable CS8601 Possible null reference assignment.
+#pragma warning disable CS8601 Possible null reference assignment.
                     Name = response.Value?.Result,
                     Icon = response.Value?.Icon
-                    #pragma warning restore CS8601 Possible null reference assignment.
+#pragma warning restore CS8601 Possible null reference assignment.
                 });
             }
         }

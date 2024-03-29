@@ -2,49 +2,58 @@ using Hooligan.Grpc.Consumers;
 using MassTransit;
 using NotificationService = Hooligan.Grpc.Services.NotificationService;
 
-var HooliganSpecificOrigin = "_hooliganSpecificOrigins";
+const string allowAll = "AllowAll";
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
-
-// Add services to the container.
-builder.Services.AddGrpc();
-builder.Services.AddSingleton<NotificationService>();
-builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<AssociationConsumer>();
-    x.UsingRabbitMq((context, cfg) =>
+    builder.AddServiceDefaults();
+
+    // Add services to the container.
+    builder.Services.AddGrpc();
+
+    builder.Services.AddCors(o => o.AddPolicy(allowAll, policyBuilder =>
     {
-        var connectionString = builder.Configuration.GetConnectionString("messaging");
-        if (connectionString is not null)
-        {
-            cfg.Host(new Uri(connectionString));
-        }
-        cfg.ConfigureEndpoints(context);
-    });
-});
+        policyBuilder.WithOrigins("http://localhost:5044")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .WithExposedHeaders(
+                "Grpc-Status",
+                "Grpc-Message",
+                "Grpc-Encoding",
+                "Grpc-Accept-Encoding");
+    }));
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(
-        policy =>
+    builder.Services.AddSingleton<NotificationService>();
+    builder.Services.AddMassTransit(x =>
+    {
+        x.AddConsumer<AssociationConsumer>();
+        x.UsingRabbitMq((context, cfg) =>
         {
-            policy.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding");
+            var connectionString = builder.Configuration.GetConnectionString("messaging");
+            if (connectionString is not null)
+            {
+                cfg.Host(new Uri(connectionString));
+            }
+
+            cfg.ConfigureEndpoints(context);
         });
-});
+    });
+}
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
-app.UseCors();
-app.UseRouting();
+{
+    app.MapDefaultEndpoints();
+    app.UseRouting();
 
-// Configure the HTTP request pipeline.
-app.UseGrpcWeb();
-app.MapGrpcService<NotificationService>().EnableGrpcWeb().RequireCors();
+    // Configure the HTTP request pipeline.
+    app.UseGrpcWeb();
+    app.UseCors();
+
+    app.MapGrpcService<NotificationService>()
+        .EnableGrpcWeb()
+        .RequireCors(allowAll);
+}
 
 app.Run();

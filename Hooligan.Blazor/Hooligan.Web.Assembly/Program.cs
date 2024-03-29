@@ -9,9 +9,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.Services.AddMudServices(c => { c.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight; });
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:7259") });
-builder.Services.AddScoped<HooliganApiClient>();
-
+builder.Services.AddHttpClient<HooliganApiClient>(client => client.BaseAddress = new Uri("http://localhost:7259"));
 builder.Services.AddGrpcClient<NotificationService.NotificationServiceClient>(options =>
     {
         options.Address = new Uri("http://localhost:5136");

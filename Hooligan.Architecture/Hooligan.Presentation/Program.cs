@@ -1,9 +1,8 @@
 using Hooligan.Presentation;
 
-var HooliganSpecificOrigin = "_hooliganSpecificOrigins";
+const string allowAll = "AllowAll";
 
 var builder = WebApplication.CreateBuilder(args);
-
 {
     builder.AddServiceDefaults();
     builder.Services.AddEndpointsApiExplorer();
@@ -14,12 +13,12 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy(name: HooliganSpecificOrigin,
+        options.AddPolicy(allowAll,
             policy =>
             {
                 policy.WithOrigins("http://localhost:5044")
-                      .AllowAnyHeader()
-                      .AllowAnyMethod();
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
             });
     });
 }
@@ -38,7 +37,7 @@ var app = builder.Build();
     }
 
     app.UseHttpsRedirection();
-    app.UseCors(HooliganSpecificOrigin);
+    app.UseCors(allowAll);
 }
 
 app.Run();
