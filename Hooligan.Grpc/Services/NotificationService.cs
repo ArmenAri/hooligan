@@ -8,25 +8,33 @@ namespace Hooligan.Grpc.Services;
 public sealed class NotificationService
     : HooliganNotification.NotificationService.NotificationServiceBase
 {
-    private readonly ConcurrentDictionary<string, IServerStreamWriter<Notification>> _subscribers = new();
+    private readonly ConcurrentDictionary<Guid, IServerStreamWriter<Notification>> _subscribers = new();
     private readonly ConcurrentQueue<string> _notifications = [];
 
     public override async Task Subscribe(Empty request,
         IServerStreamWriter<Notification> responseStream, ServerCallContext context)
     {
-        _subscribers.TryAdd(Guid.NewGuid().ToString(), responseStream);
+        var clientId = Guid.NewGuid();
+        _subscribers.TryAdd(clientId, responseStream);
 
-        while (!context.CancellationToken.IsCancellationRequested)
+        try
         {
-            if (!_notifications.TryDequeue(out var notification))
+            while (!context.CancellationToken.IsCancellationRequested)
             {
-                continue;
-            }
+                if (!_notifications.TryDequeue(out var notification))
+                {
+                    continue;
+                }
 
-            foreach (var stream in _subscribers.Values)
-            {
-                await stream.WriteAsync(new Notification { Message = notification });
+                foreach (var stream in _subscribers.Values)
+                {
+                    await stream.WriteAsync(new Notification { Message = notification });
+                }
             }
+        }
+        finally
+        {
+            _subscribers.TryRemove(clientId, out _);
         }
     }
 
