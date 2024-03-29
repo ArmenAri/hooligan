@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Hooligan.Web.Client.Models;
+namespace Hooligan.Web.Assembly.Models;
 
 public class HooliganException
 {

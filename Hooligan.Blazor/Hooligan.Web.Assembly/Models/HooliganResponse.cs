@@ -1,4 +1,6 @@
-namespace Hooligan.Web.Client.Models;
+using System.Net.Http.Json;
+
+namespace Hooligan.Web.Assembly.Models;
 
 public partial class HooliganResponse<T>
 {

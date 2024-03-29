@@ -9,13 +9,15 @@
 
     <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.0-preview.2.24128.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.2" />
+        <PackageReference Include="MudBlazor" Version="6.19.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Hooligan.Aspire\Hooligan.ServiceDefaults\Hooligan.ServiceDefaults.csproj" />
       <ProjectReference Include="..\..\Hooligan.BuildingBlocks\Hooligan.Common\Hooligan.Common.csproj" />
-      <ProjectReference Include="..\Hooligan.Web.Client\Hooligan.Web.Client.csproj" />
+      <ProjectReference Include="..\Hooligan.Web.Assembly\Hooligan.Web.Assembly.csproj" />
+      <ProjectReference Include="..\Hooligan.Web.CSR\Hooligan.Web.CSR.csproj" />
       <ProjectReference Include="..\Hooligan.Web.Proto\Hooligan.Web.Proto.csproj" />
     </ItemGroup>
 

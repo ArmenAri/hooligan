@@ -1,9 +1,9 @@
 using Grpc.Net.Client.Web;
-using Hooligan.Web.Client;
-using Hooligan.Web.Components;
+using Hooligan.Web.Assembly;
 using HooliganNotification;
 using MudBlazor;
 using MudBlazor.Services;
+using App = Hooligan.Web.Components.App;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +12,8 @@ builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveWebAssemblyComponents()
-    .AddInteractiveServerComponents();
+                .AddInteractiveWebAssemblyComponents()
+                .AddInteractiveServerComponents();
 
 builder.Services.AddOutputCache();
 
@@ -39,7 +39,7 @@ else
 }
 
 app.UseStaticFiles();
-
+app.UseRouting();
 app.UseAntiforgery();
 
 app.UseOutputCache();
@@ -47,7 +47,7 @@ app.UseOutputCache();
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddInteractiveServerRenderMode()
-    .AddAdditionalAssemblies(typeof(Hooligan.Web.Client.Components._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(Hooligan.Web.Assembly._Imports).Assembly);
 
 app.MapDefaultEndpoints();
 

@@ -1,16 +1,9 @@
 ﻿@page "/Game"
-@using Hooligan.Web.Client.Models
-@using HooliganNotification
-@using Google.Protobuf.WellKnownTypes
-@using Grpc.Core
+@inject HooliganApiClient HooliganApi
+@inject ISnackbar SnackBar
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@inject NotificationService.NotificationServiceClient Client
-@inject HooliganApiClient HooliganApi
-@inject ISnackbar Snackbar
-
-<MudDialogProvider/>
-<MudSnackbarProvider/>
+<MudSnackbarProvider />
 
 <PageTitle>Game</PageTitle>
 
@@ -42,26 +35,6 @@
         TargetItem = item;
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-
-        var subscription = Client.Subscribe(new Empty());
-
-        try
-        {
-            await foreach (var notification in subscription.ResponseStream.ReadAllAsync())
-            {
-                Snackbar.Add(notification.Message, Severity.Success, options => { options.SuccessIcon = Icons.Material.Filled.Backpack; });
-                StateHasChanged();
-            }
-        }
-        catch (RpcException ex) when (ex.StatusCode == StatusCode.Cancelled)
-        {
-            // ignored
-        }
-    }
-
     private async Task ItemUpdated(MudItemDropInfo<Item> dropItem)
     {
         ArgumentNullException.ThrowIfNull(dropItem.Item);
@@ -76,16 +49,16 @@
 
             if (response.IsFail())
             {
-                Snackbar.Add(response.Error?.Message, Severity.Error, options => { options.ErrorIcon = Icons.Material.Filled.Error; });
+                SnackBar.Add(response.Error?.Message, Severity.Error, options => { options.ErrorIcon = Icons.Material.Filled.Error; });
             }
             else
             {
                 _items.Add(new Item
                 {
-#pragma warning disable CS8601 // Possible null reference assignment.
+                    #pragma warning disable CS8601 Possible null reference assignment.
                     Name = response.Value?.Result,
                     Icon = response.Value?.Icon
-#pragma warning restore CS8601 // Possible null reference assignment.
+                    #pragma warning restore CS8601 Possible null reference assignment.
                 });
             }
         }
