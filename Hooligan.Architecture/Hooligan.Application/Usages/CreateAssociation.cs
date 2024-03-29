@@ -15,7 +15,7 @@ public sealed record CreateAssociation(string First, string Second) : ICommand<A
 
 public sealed class CreateAssociationHandler(
     IAssociationRepository associationRepository,
-    [FromKeyedServices(ServiceKeys.Faker)] IExternalAssociationProvider externalAssociationProvider,
+    [FromKeyedServices(ServiceKeys.Eden)] IExternalAssociationProvider externalAssociationProvider,
     IAssociationNotifier associationNotifier)
     : ICommandHandler<CreateAssociation, Association>
 {
@@ -40,15 +40,18 @@ public sealed class CreateAssociationHandler(
             request.Second,
             cancellationToken);
 
-        if (@new is null)
+        return await @new.Match(Succeed, Failed);
+
+        async Task<Result<Association>> Succeed(Association success)
         {
-            return new Result<Association>(new InternalServerException(HooliganErrors.ExternalProviderUnavailable,
-                $"An error occured when using {externalAssociationProvider.GetType()}"));
+            await associationRepository.CreateAsync(success, cancellationToken);
+            await associationNotifier.NotifyNew(new NewAssociation(success.Result));
+            return success;
         }
 
-        await associationRepository.CreateAsync(@new, cancellationToken);
-        await associationNotifier.NotifyNew(new NewAssociation(@new.Result));
-
-        return @new;
+        Task<Result<Association>> Failed(Exception exception)
+        {
+            return Task.FromResult(new Result<Association>(exception));
+        }
     }
 }
