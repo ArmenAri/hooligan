@@ -1,30 +1,43 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using System.Collections.Concurrent;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using HooliganNotification;
 
 namespace Hooligan.Grpc.Services;
 
-public sealed class NotificationService : HooliganNotification.NotificationService.NotificationServiceBase
+public sealed class NotificationService
+    : HooliganNotification.NotificationService.NotificationServiceBase
 {
-    private readonly Queue<string> _notifications = [];
+    private readonly ConcurrentDictionary<Guid, IServerStreamWriter<Notification>> _subscribers = new();
+    private readonly ConcurrentQueue<string> _notifications = [];
 
     public override async Task Subscribe(Empty request,
         IServerStreamWriter<Notification> responseStream, ServerCallContext context)
     {
-        while (!context.CancellationToken.IsCancellationRequested)
+        var clientId = Guid.NewGuid();
+        _subscribers.TryAdd(clientId, responseStream);
+
+        try
         {
-            var canDequeue = _notifications.TryDequeue(out var notification);
-
-            if (!canDequeue || notification is null)
+            while (!context.CancellationToken.IsCancellationRequested)
             {
-                continue;
-            }
+                if (!_notifications.TryDequeue(out var notification))
+                {
+                    continue;
+                }
 
-            await responseStream.WriteAsync(new Notification { Message = notification }, context.CancellationToken);
+                foreach (var stream in _subscribers.Values)
+                {
+                    await stream.WriteAsync(new Notification { Message = notification });
+                }
+            }
+        }
+        finally
+        {
+            _subscribers.TryRemove(clientId, out _);
         }
     }
 
-    // Method to send a new notification
     public void SendNotification(string message)
     {
         _notifications.Enqueue(message);

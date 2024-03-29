@@ -1,5 +1,9 @@
 ﻿@page "/Game"
+@using Google.Protobuf.WellKnownTypes
+@using Grpc.Core
+@using HooliganNotification
 @inject HooliganApiClient HooliganApi
+@inject NotificationService.NotificationServiceClient Client;
 @inject ISnackbar SnackBar
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
@@ -33,6 +37,29 @@
     private void HandleDrop(Item item)
     {
         TargetItem = item;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var headers = new Metadata();
+        headers.Add("Access-Control-Allow-Origin", "http://localhost:5044/");
+
+        var subscription = Client.Subscribe(new Empty(), headers: headers);
+
+        try
+        {
+            await foreach (var notification in subscription.ResponseStream.ReadAllAsync())
+            {
+                SnackBar.Add(notification?.Message, Severity.Success, options => { options.SuccessIcon = Icons.Material.Filled.Backpack; });
+                StateHasChanged();
+            }
+        }
+        catch(RpcException)
+        {
+            // ignored
+        }
     }
 
     private async Task ItemUpdated(MudItemDropInfo<Item> dropItem)

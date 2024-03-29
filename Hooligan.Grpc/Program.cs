@@ -2,6 +2,8 @@ using Hooligan.Grpc.Consumers;
 using MassTransit;
 using NotificationService = Hooligan.Grpc.Services.NotificationService;
 
+var HooliganSpecificOrigin = "_hooliganSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -23,12 +25,26 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding");
+        });
+});
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
+app.UseCors();
+app.UseRouting();
 
 // Configure the HTTP request pipeline.
 app.UseGrpcWeb();
-app.MapGrpcService<NotificationService>().EnableGrpcWeb();
+app.MapGrpcService<NotificationService>().EnableGrpcWeb().RequireCors();
 
 app.Run();
