@@ -13,7 +13,7 @@ public sealed class EdenAssociationProvider(EdenApiClient edenApiClient) : IExte
     public async Task<Result<Association>> GetNewAsync(string first, string second,
         CancellationToken cancellationToken = default)
     {
-        var edenResponse = await edenApiClient.GetAssociationAsync(first, second);
+        var edenResponse = await edenApiClient.GetAssociationAsync(first, second, cancellationToken);
 
         if (edenResponse.OpenAi is not null)
         {

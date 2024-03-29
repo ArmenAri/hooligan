@@ -6,8 +6,8 @@ namespace Hooligan.Infrastructure.Implementations;
 
 public sealed class AssociationNotifier(IPublishEndpoint publisher) : IAssociationNotifier
 {
-    public async Task NotifyNew(NewAssociation association)
+    public async Task NotifyNew(NewAssociation association, CancellationToken cancellationToken)
     {
-        await publisher.Publish(association);
+        await publisher.Publish(association, cancellationToken);
     }
 }

@@ -45,7 +45,7 @@ public sealed class CreateAssociationHandler(
         async Task<Result<Association>> Succeed(Association success)
         {
             await associationRepository.CreateAsync(success, cancellationToken);
-            await associationNotifier.NotifyNew(new NewAssociation(success.Result));
+            await associationNotifier.NotifyNew(new NewAssociation(success.Result), cancellationToken);
             return success;
         }
 

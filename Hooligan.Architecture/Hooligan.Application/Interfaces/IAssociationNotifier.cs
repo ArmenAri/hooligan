@@ -5,5 +5,5 @@ namespace Hooligan.Application.Interfaces;
 
 public interface IAssociationNotifier
 {
-    public Task NotifyNew(NewAssociation association);
+    public Task NotifyNew(NewAssociation association, CancellationToken cancellationToken = default);
 }
