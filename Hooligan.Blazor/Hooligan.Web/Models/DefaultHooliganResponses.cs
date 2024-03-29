@@ -1,4 +1,4 @@
-namespace Hooligan.Web.Client.Models;
+namespace Hooligan.Web.Models;
 
 public partial class HooliganResponse<T>
 {

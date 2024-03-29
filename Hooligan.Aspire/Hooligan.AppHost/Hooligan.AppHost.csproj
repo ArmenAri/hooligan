@@ -18,7 +18,6 @@
       <ProjectReference Include="..\..\Hooligan.Architecture\Hooligan.Presentation\Hooligan.Presentation.csproj" />
       <ProjectReference Include="..\..\Hooligan.Blazor\Hooligan.Web\Hooligan.Web.csproj" />
       <ProjectReference Include="..\..\Hooligan.Grpc\Hooligan.Grpc.csproj" />
-      <ProjectReference Include="..\..\Hooligan.Blazor\Hooligan.Web.Client\Hooligan.Web.Client.csproj" />
     </ItemGroup>
 
 </Project>

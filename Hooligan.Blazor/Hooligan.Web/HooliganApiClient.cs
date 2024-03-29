@@ -1,7 +1,7 @@
 using System.Net;
-using Hooligan.Web.Client.Models;
+using Hooligan.Web.Models;
 
-namespace Hooligan.Web.Client;
+namespace Hooligan.Web;
 
 public class HooliganApiClient(HttpClient httpClient)
 {

@@ -9,7 +9,7 @@ var grpc = builder.AddProject<Projects.Hooligan_Grpc>("grpc")
                 .WithReference(messaging);
 
 builder.AddProject<Projects.Hooligan_Web>("front")
-       .WithReference(grpc)
-       .WithReference(backend);
+    .WithReference(grpc)
+    .WithReference(backend);
 
 builder.Build().Run();

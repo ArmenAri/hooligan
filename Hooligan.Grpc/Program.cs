@@ -19,16 +19,16 @@ builder.Services.AddMassTransit(x =>
         {
             cfg.Host(new Uri(connectionString));
         }
+
         cfg.ConfigureEndpoints(context);
     });
 });
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
-
 // Configure the HTTP request pipeline.
 app.UseGrpcWeb();
+
 app.MapGrpcService<NotificationService>().EnableGrpcWeb();
 
 app.Run();
