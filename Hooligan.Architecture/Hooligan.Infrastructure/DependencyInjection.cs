@@ -3,6 +3,7 @@ using Hooligan.Application.Structures;
 using Hooligan.Infrastructure.Clients;
 using Hooligan.Infrastructure.Context;
 using Hooligan.Infrastructure.Implementations;
+using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +25,20 @@ public static class DependencyInjection
 
         services.AddKeyedScoped<IExternalAssociationProvider, FakerAssociationProvider>(ServiceKeys.Faker);
         services.AddKeyedScoped<IExternalAssociationProvider, EdenAssociationProvider>(ServiceKeys.Eden);
+
+        services.AddScoped<IAssociationNotifier, AssociationNotifier>();
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                var connectionString = configuration.GetConnectionString("messaging");
+                if (connectionString is not null)
+                {
+                    cfg.Host(new Uri(connectionString));
+                }
+                cfg.ConfigureEndpoints(context);
+            });
+        });
 
         return services.AddDbContext<HooliganDbContext>(options =>
             options.UseSqlite(configuration.GetConnectionString("HooliganConnectionString"))

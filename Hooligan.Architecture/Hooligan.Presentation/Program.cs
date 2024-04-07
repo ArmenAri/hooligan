@@ -15,7 +15,6 @@ var app = builder.Build();
 
 {
     app.UseExceptionHandler();
-    app.MapDefaultEndpoints();
     app.MapControllers();
 
     if (app.Environment.IsDevelopment())
@@ -25,6 +24,11 @@ var app = builder.Build();
     }
 
     app.UseHttpsRedirection();
+
+    app.UseCors(policyBuilder => policyBuilder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
 }
 
 app.Run();

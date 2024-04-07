@@ -23,10 +23,10 @@ public class CraftableItems : IQueryable<string>, IAsyncEnumerable<string>
 
     private static readonly string[] OriginalItems =
     [
-        "earth",
-        "water",
-        "wind",
-        "fire"
+        "Earth",
+        "Water",
+        "Wind",
+        "Fire"
     ];
 
     public IEnumerator<string> GetEnumerator()
@@ -36,7 +36,7 @@ public class CraftableItems : IQueryable<string>, IAsyncEnumerable<string>
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return _queryableItems.GetEnumerator();
+        return GetEnumerator();
     }
 
     public IAsyncEnumerator<string> GetAsyncEnumerator(CancellationToken cancellationToken = default)

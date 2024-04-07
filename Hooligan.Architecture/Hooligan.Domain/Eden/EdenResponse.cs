@@ -9,7 +9,8 @@ namespace Hooligan.Domain.Eden;
 
 public sealed class EdenResponse
 {
-    [JsonPropertyName("openai")] public required OpenAi OpenAi { get; set; }
+    [JsonPropertyName("openai")] public required OpenAi? OpenAi { get; set; }
+    public string? Error { get; set; }
 }
 
 public sealed class OpenAi

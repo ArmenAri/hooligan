@@ -23,7 +23,7 @@ public sealed class EdenApiClient
         _restClient = new RestClient(restClientOptions);
     }
 
-    public async Task<EdenResponse?> GetAssociationAsync(string first, string second)
+    public async Task<EdenResponse> GetAssociationAsync(string first, string second, CancellationToken cancellationToken)
     {
         var request = new RestRequest("");
         request.AddHeader("Accept", "application/json");
@@ -42,13 +42,28 @@ public sealed class EdenApiClient
 
         try
         {
-            var restResponse = await _restClient.PostAsync(request);
+            var restResponse = await _restClient.PostAsync(request, cancellationToken);
             ArgumentNullException.ThrowIfNull(restResponse.Content);
-            return JsonSerializer.Deserialize<EdenResponse>(restResponse.Content);
+            var response = JsonSerializer.Deserialize<EdenResponse>(restResponse.Content);
+
+            if (response is null)
+            {
+                return new EdenResponse
+                {
+                    OpenAi = null,
+                    Error = "Serialization error occured"
+                };
+            }
+
+            return response;
         }
-        catch
+        catch (Exception e)
         {
-            return null;
+            return new EdenResponse
+            {
+                OpenAi = null,
+                Error = e.Message
+            };
         }
     }
 }
