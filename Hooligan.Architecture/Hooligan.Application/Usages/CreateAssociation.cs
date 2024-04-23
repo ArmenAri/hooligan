@@ -15,7 +15,7 @@ public sealed record CreateAssociation(string First, string Second) : ICommand<A
 
 public sealed class CreateAssociationHandler(
     IAssociationRepository associationRepository,
-    [FromKeyedServices(ServiceKeys.Eden)] IExternalAssociationProvider externalAssociationProvider,
+    [FromKeyedServices(ServiceKeys.Faker)] IExternalAssociationProvider externalAssociationProvider,
     IAssociationNotifier associationNotifier)
     : ICommandHandler<CreateAssociation, Association>
 {

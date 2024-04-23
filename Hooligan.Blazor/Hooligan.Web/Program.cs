@@ -4,6 +4,7 @@ using Hooligan.Web.Components;
 using HooliganNotification;
 using MudBlazor;
 using MudBlazor.Services;
+using Blazored.LocalStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddGrpcClient<NotificationService.NotificationServiceClient>(op
     })
     .ConfigurePrimaryHttpMessageHandler(() => new GrpcWebHandler(new HttpClientHandler()));
 builder.Services.AddMudServices(c => { c.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight; });
+builder.Services.AddBlazoredLocalStorage();
 
 var app = builder.Build();
 

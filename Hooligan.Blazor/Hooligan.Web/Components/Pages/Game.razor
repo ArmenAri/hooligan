@@ -3,12 +3,14 @@
 @using Google.Protobuf.WellKnownTypes
 @using Grpc.Core
 @using Hooligan.Web.Models
+@using Blazored.LocalStorage
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @inject NotificationService.NotificationServiceClient Client
 @inject HooliganApiClient HooliganApi
 @inject ISnackbar Snackbar
+@inject ILocalStorageService _localStorage;
 
 <MudSnackbarProvider/>
 
@@ -46,8 +48,18 @@
     {
         await base.OnInitializedAsync();
 
-        var subscription = Client.Subscribe(new Empty());
+        _items = _basicItems;
+        Console.WriteLine("Before if : " + _items.Count);
+        if (await _localStorage.ContainKeyAsync("listOfAssociations")) {
+            var _itemsInLocalStorage = await _localStorage.GetItemAsync<List<Item>>("listOfAssociations");
+            _items = _itemsInLocalStorage;
+            Console.WriteLine(_items.Count);
+            StateHasChanged();
+        }
+        StateHasChanged();
+        Console.WriteLine("Out of if : " + _items.Count);
 
+        var subscription = Client.Subscribe(new Empty());
         try
         {
             await foreach (var notification in subscription.ResponseStream.ReadAllAsync())
@@ -87,13 +99,14 @@
                     Icon = response.Value?.Icon
 #pragma warning restore CS8601 // Possible null reference assignment.
                 });
+                
+                await _localStorage.SetItemAsync("listOfAssociations", _items);
             }
         }
-
         TargetItem = null;
     }
 
-    private readonly List<Item> _items =
+    private readonly List<Item> _basicItems =
     [
         new Item { Name = "earth", Icon = "🌍" },
         new Item { Name = "wind", Icon = "🌬️" },
@@ -101,4 +114,5 @@
         new Item { Name = "water", Icon = "💧" }
     ];
 
+    private List<Item> _items = [];
 }
